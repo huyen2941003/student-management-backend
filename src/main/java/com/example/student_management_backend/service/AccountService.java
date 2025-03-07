@@ -9,5 +9,5 @@ import com.example.student_management_backend.domain.User;
 public interface AccountService {
     public ResponseEntity<?> register(User user);
 
-    public ResponseEntity<?> signIn(User user);
+    public ResponseEntity<?> login(User user);
 }

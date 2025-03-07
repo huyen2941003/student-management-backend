@@ -27,6 +27,7 @@ public class Student {
 
     @Column(name = "dob")
     private LocalDateTime dob;
+
     @Column(name = "gender", nullable = false, length = 10)
     private String gender;
 

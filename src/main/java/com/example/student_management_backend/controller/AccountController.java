@@ -23,9 +23,9 @@ public class AccountController {
         return responseEntity;
     }
 
-    @PostMapping("/sign-in")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Validated @RequestBody User user) {
-        ResponseEntity<?> response = this.accountService.signIn(user);
+        ResponseEntity<?> response = this.accountService.login(user);
         return response;
     }
 }
