@@ -1,17 +1,19 @@
 package com.example.student_management_backend.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
-@Data
+import com.example.student_management_backend.util.SecurityUtil;
+import com.example.student_management_backend.util.constant.GenderEnum;
+
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "student")
+@Table(name = "students")
+@Getter
+@Setter
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +24,17 @@ public class Student {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
     private User user;
 
-    @Column(name = "full_name", nullable = false, length = 50)
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
+
+    @Column(name = "fullName", nullable = false, length = 50)
     private String fullName;
 
     @Column(name = "dob")
     private LocalDateTime dob;
 
     @Column(name = "gender", nullable = false, length = 10)
-    private String gender;
+    private GenderEnum gender;
 
     @Column(name = "phone", nullable = false, length = 15)
     private String phone;
@@ -43,10 +48,26 @@ public class Student {
     @Column(name = "year", nullable = false)
     private Integer year;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private String createdBy;
+    private String updatedBy;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
 
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+
+        this.updatedAt = Instant.now();
+    }
 }
