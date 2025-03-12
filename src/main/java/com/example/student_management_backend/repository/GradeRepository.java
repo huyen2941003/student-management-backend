@@ -1,7 +1,6 @@
 package com.example.student_management_backend.repository;
 
 import com.example.student_management_backend.domain.Grades;
-import com.example.student_management_backend.dto.response.GpaResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

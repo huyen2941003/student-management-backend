@@ -5,7 +5,6 @@ import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.request.ScheduleCourseRequest;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import com.example.student_management_backend.repository.CourseClassRepository;
-import com.example.student_management_backend.repository.CourseRepository;
 import com.example.student_management_backend.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,10 +24,8 @@ public class ScheduleService {
 
     public ScheduleResponse createSchedule(ScheduleCourseRequest request) throws Exception {
         Schedule schedule = new Schedule();
-        CourseClass courseClass = courseClassRepository.
-                findById(request.getCoursesId()).orElseThrow(
-                () -> new Exception("CourseClass dont exists")
-        );
+        CourseClass courseClass = courseClassRepository.findById(request.getCoursesId()).orElseThrow(
+                () -> new Exception("CourseClass dont exists"));
         schedule.setCourses(courseClass);
         schedule.setStartTime(request.getStartTime());
         schedule.setEndTime(request.getEndTime());
@@ -44,8 +41,7 @@ public class ScheduleService {
 
     public void deleteScheduleById(int id) throws Exception {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
-                ()-> new Exception("K tồn tại schedule with id:"+id)
-        );
+                () -> new Exception("K tồn tại schedule with id:" + id));
         scheduleRepository.delete(schedule);
     }
 }

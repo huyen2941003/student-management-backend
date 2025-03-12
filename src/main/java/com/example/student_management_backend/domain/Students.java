@@ -19,9 +19,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Students extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

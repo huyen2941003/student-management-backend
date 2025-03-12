@@ -13,10 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RoleResponse {
     private long id;
-    private String roleName;
+    private String role;
 
     public RoleResponse(Role role) {
         this.id = role.getId();
-        this.roleName = role.getRoleName();
+        this.role = role.getRole();
     }
 }

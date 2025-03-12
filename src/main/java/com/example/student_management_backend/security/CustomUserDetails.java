@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Lấy role từ User và trả về danh sách các quyền
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName()));
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRole()));
     }
 
     @Override

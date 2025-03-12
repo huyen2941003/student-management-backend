@@ -2,7 +2,6 @@ package com.example.student_management_backend.security;
 
 import io.jsonwebtoken.security.Keys;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -10,7 +9,6 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import io.jsonwebtoken.*;
-import java.security.Key;
 
 @Component
 public class JwtTokenProvider {

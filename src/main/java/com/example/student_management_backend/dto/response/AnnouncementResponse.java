@@ -1,7 +1,5 @@
 package com.example.student_management_backend.dto.response;
 
-import com.example.student_management_backend.domain.User;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;

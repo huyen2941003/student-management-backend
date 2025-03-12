@@ -20,11 +20,11 @@ public class RoleService {
 
     // Tạo mới role
     public RoleResponse createRole(RoleDTO roleDTO) {
-        if (roleRepository.existsByRoleName(roleDTO.getRoleName())) {
+        if (roleRepository.existsByRole(roleDTO.getRoleName())) {
             throw new RuntimeException("Role name đã tồn tại!");
         }
         Role role = new Role();
-        role.setRoleName(roleDTO.getRoleName());
+        role.setRole(roleDTO.getRoleName());
         role.setCreatedAt(Instant.now());
         role.setUpdatedAt(Instant.now());
 
@@ -48,7 +48,7 @@ public class RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
 
-        role.setRoleName(roleDTO.getRoleName());
+        role.setRole(roleDTO.getRoleName());
         role.setUpdatedAt(Instant.now());
 
         role = roleRepository.save(role);

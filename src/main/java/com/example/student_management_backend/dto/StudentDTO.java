@@ -1,10 +1,6 @@
 package com.example.student_management_backend.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.student_management_backend.util.constant.GenderEnum;
 
 import lombok.AllArgsConstructor;

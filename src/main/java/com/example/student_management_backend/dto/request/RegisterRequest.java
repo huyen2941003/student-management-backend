@@ -1,7 +1,6 @@
 package com.example.student_management_backend.dto.request;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import com.example.student_management_backend.util.constant.GenderEnum;
 

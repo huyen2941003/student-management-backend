@@ -20,7 +20,7 @@ public class Role {
     private long id;
 
     @NotBlank(message = "name không được để trống")
-    private String roleName;
+    private String role;
 
     private Instant createdAt;
     private Instant updatedAt;

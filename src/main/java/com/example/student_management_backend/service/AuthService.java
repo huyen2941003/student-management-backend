@@ -1,8 +1,5 @@
 package com.example.student_management_backend.service;
 
-import java.time.Instant;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,9 +9,7 @@ import com.example.student_management_backend.domain.Majors;
 import com.example.student_management_backend.domain.Role;
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.domain.User;
-import com.example.student_management_backend.dto.request.ForgotPasswordRequest;
 import com.example.student_management_backend.dto.request.RegisterRequest;
-import com.example.student_management_backend.dto.request.ResetPasswordRequest;
 import com.example.student_management_backend.dto.response.RegisterResponse;
 import com.example.student_management_backend.repository.DepartmentsRepository;
 import com.example.student_management_backend.repository.MajorsRepository;
