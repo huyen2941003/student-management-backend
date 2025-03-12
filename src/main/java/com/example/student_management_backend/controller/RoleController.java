@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.student_management_backend.dto.RoleDTO;
-import com.example.student_management_backend.dto.reponse.role.RoleResponse;
+import com.example.student_management_backend.dto.response.role.RoleResponse;
 import com.example.student_management_backend.service.RoleService;
 
 @RestController

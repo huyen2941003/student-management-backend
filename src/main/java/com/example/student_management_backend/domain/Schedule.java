@@ -1,45 +1,36 @@
 package com.example.student_management_backend.domain;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Entity
-@Table(name = "schedules")
+@Table(name = "schedule")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @ManyToOne
+    @JoinColumn(name = "classId", nullable = false)
+    private CourseClass courses; // Lớp học phần
 
-    @Column(name = "classroom", nullable = false, length = 50)
-    private String classroom;
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
-
-    @Column(name = "day_of_week", nullable = false, length = 10)
-    private String dayOfWeek;
-
-    private Instant createdAt;
-    private Instant updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false)
-    private Subject subject;
-
+    private LocalTime endTime;
+    private String room;
 }

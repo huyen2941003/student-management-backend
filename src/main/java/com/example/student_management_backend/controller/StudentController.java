@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.student_management_backend.dto.StudentDTO;
-import com.example.student_management_backend.dto.reponse.student.StudentResponse;
+import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.service.StudentService;
 
 @RestController

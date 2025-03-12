@@ -1,5 +1,6 @@
 package com.example.student_management_backend.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -16,14 +17,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDTO {
-    private String studentCode;
-    private String email;
     private String fullName;
-    private LocalDateTime dob;
+    private LocalDate dob;
     private GenderEnum gender;
+    private String email;
     private String phone;
     private String address;
-    private String major;
-    private Integer year;
-
+    private Integer majorId;
+    private Integer departmentId;
 }

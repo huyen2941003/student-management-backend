@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Role;
 import com.example.student_management_backend.dto.RoleDTO;
-import com.example.student_management_backend.dto.reponse.role.RoleResponse;
+import com.example.student_management_backend.dto.response.role.RoleResponse;
 import com.example.student_management_backend.repository.RoleRepository;
 
 @Service

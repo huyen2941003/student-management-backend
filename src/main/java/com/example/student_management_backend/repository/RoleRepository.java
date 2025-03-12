@@ -7,7 +7,7 @@ import com.example.student_management_backend.domain.Role;
 import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Optional<Role> findById(Long id);
+    Optional<Role> findById(Integer id);
 
     boolean existsByRoleName(String roleName);
 }

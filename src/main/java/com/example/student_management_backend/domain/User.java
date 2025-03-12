@@ -1,34 +1,29 @@
 package com.example.student_management_backend.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
+import lombok.ToString;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
-public class User {
+@ToString
+@RequiredArgsConstructor
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
-    @NotBlank(message = "username không được để trống")
     private String username;
 
-    @NotBlank(message = "password không được để trống")
     private String password;
 
-    private Instant createdAt;
-    private Instant updatedAt;
-
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "roleId", referencedColumnName = "id")
     private Role role;
 
-    private String resetToken;
-    private Instant resetTokenExpiry;
+    private String fcmToken;
+
 }
