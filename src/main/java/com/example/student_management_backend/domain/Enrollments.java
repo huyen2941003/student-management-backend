@@ -11,15 +11,16 @@ import lombok.ToString;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class User extends BaseEntity{
+public class Enrollments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String username;
-    private String password;
+    Integer id;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @ManyToOne
-    @JoinColumn(name="roleId",referencedColumnName = "id")
-    private Role role;
-    private String fcmToken;
+    @JoinColumn(name = "classId",referencedColumnName = "id")
+    CourseClass classes;
+    @ManyToOne
+    @JoinColumn(name = "studentId",referencedColumnName = "id")
+    Students students;
 }
