@@ -1,59 +1,64 @@
 package com.example.student_management_backend.controller;
 
-import org.springframework.http.HttpStatus;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
 
-import com.example.student_management_backend.domain.Role;
+import com.example.student_management_backend.dto.RoleDTO;
+import com.example.student_management_backend.dto.reponse.role.RoleResponse;
 import com.example.student_management_backend.service.RoleService;
-import com.example.student_management_backend.util.annotation.ApiMessage;
-import com.example.student_management_backend.util.error.IdInvalidException;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/roles")
 public class RoleController {
 
-    private final RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
+    // Tạo mới role
+    @PostMapping
+    public ResponseEntity<?> createRole(@RequestBody RoleDTO roleDTO) {
+        RoleResponse response = roleService.createRole(roleDTO);
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/roles")
-    @ApiMessage("Create a role")
-    public ResponseEntity<Role> create(@Valid @RequestBody Role r) throws IdInvalidException {
-        // check name
-        if (this.roleService.existByName(r.getRoleName())) {
-            throw new IdInvalidException("Role với name = " + r.getRoleName() + " đã tồn tại");
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.roleService.create(r));
+    // Lấy danh sách tất cả roles
+    @GetMapping
+    public ResponseEntity<?> getAllRoles() {
+        List<RoleResponse> response = roleService.getAllRoles();
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/roles")
-    @ApiMessage("Update a role")
-    public ResponseEntity<Role> update(@Valid @RequestBody Role r) throws IdInvalidException {
-        // check id
-        if (this.roleService.fetchById(r.getId()) == null) {
-            throw new IdInvalidException("Role với id = " + r.getId() + " không tồn tại");
-        }
-        return ResponseEntity.ok().body(this.roleService.update(r));
+    // Lấy role theo ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getRoleById(@PathVariable long id) {
+        RoleResponse response = roleService.getRoleById(id);
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/roles/{id}")
-    @ApiMessage("Delete a role")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) throws IdInvalidException {
-        // check id
-        if (this.roleService.fetchById(id) == null) {
-            throw new IdInvalidException("Role với id = " + id + " không tồn tại");
-        }
-        this.roleService.delete(id);
-        return ResponseEntity.ok().body(null);
+    // Cập nhật role
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateRole(@PathVariable long id, @RequestBody RoleDTO roleDTO) {
+        RoleResponse response = roleService.updateRole(id, roleDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    // Xóa role
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRole(@PathVariable long id) {
+        roleService.deleteRole(id);
+        return ResponseEntity.ok("Role deleted successfully");
     }
 }

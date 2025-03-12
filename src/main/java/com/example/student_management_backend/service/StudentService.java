@@ -1,15 +1,14 @@
 package com.example.student_management_backend.service;
 
-import java.util.Optional;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Student;
-import com.example.student_management_backend.domain.User;
-import com.example.student_management_backend.dto.reponse.ResStudentDTO;
+import com.example.student_management_backend.dto.StudentDTO;
+import com.example.student_management_backend.dto.reponse.student.StudentResponse;
 import com.example.student_management_backend.repository.StudentRepository;
-import com.example.student_management_backend.repository.UserRepository;
 
 @Service
 public class StudentService {
@@ -17,65 +16,34 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    public Student handleCreateStudent(Student student) {
-        // Kiểm tra và thiết lập thông tin người dùng (user) nếu có
-        if (student.getUser() != null) {
-            Optional<User> userOptional = this.userRepository.findById(student.getUser().getId());
-            student.setUser(userOptional.isPresent() ? userOptional.get() : null);
-        }
-
-        return this.studentRepository.save(student);
+    // Lấy thông tin sinh viên theo ID
+    public StudentResponse getStudentById(Integer id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không có sinh viên nào có id: " + id));
+        return new StudentResponse(student);
     }
 
-    public void handleDeleteStudent(Integer id) {
-        this.studentRepository.deleteById(id);
-    }
+    // Cập nhật thông tin sinh viên
+    public StudentResponse updateStudent(Integer id, StudentDTO studentDTO) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không có sinh viên nào có id: " + id));
 
-    public Student fetchStudentById(Integer id) {
-        Optional<Student> studentOptional = this.studentRepository.findById(id);
-        return studentOptional.orElse(null);
-    }
+        // Cập nhật thông tin từ DTO
+        student.setStudentCode(studentDTO.getStudentCode());
+        student.setEmail(studentDTO.getEmail());
+        student.setFullName(studentDTO.getFullName());
+        student.setDob(studentDTO.getDob());
+        student.setGender(studentDTO.getGender());
+        student.setPhone(studentDTO.getPhone());
+        student.setAddress(studentDTO.getAddress());
+        student.setMajor(studentDTO.getMajor());
+        student.setYear(studentDTO.getYear());
+        student.setUpdatedAt(Instant.now());
 
-    public Student handleUpdateStudent(Student reqStudent) {
-        Student currentStudent = this.fetchStudentById(reqStudent.getId());
-        if (currentStudent != null) {
-            currentStudent.setFullName(reqStudent.getFullName());
-            currentStudent.setDob(reqStudent.getDob());
-            currentStudent.setGender(reqStudent.getGender());
-            currentStudent.setPhone(reqStudent.getPhone());
-            currentStudent.setAddress(reqStudent.getAddress());
-            currentStudent.setMajor(reqStudent.getMajor());
-            currentStudent.setYear(reqStudent.getYear());
+        // Lưu thông tin cập nhật vào database
+        studentRepository.save(student);
 
-            // Kiểm tra và cập nhật thông tin người dùng (user) nếu có
-            if (reqStudent.getUser() != null) {
-                Optional<User> userOptional = this.userRepository.findById(reqStudent.getUser().getId());
-                currentStudent.setUser(userOptional.isPresent() ? userOptional.get() : null);
-            }
-
-            // Cập nhật
-            currentStudent = this.studentRepository.save(currentStudent);
-        }
-        return currentStudent;
-    }
-
-    public ResStudentDTO convertToResStudentDTO(Student student) {
-        ResStudentDTO res = new ResStudentDTO();
-        res.setId(student.getId());
-        res.setEmail(student.getEmail());
-        res.setFullName(student.getFullName());
-        res.setDob(student.getDob());
-        res.setGender(student.getGender());
-        res.setPhone(student.getPhone());
-        res.setAddress(student.getAddress());
-        res.setMajor(student.getMajor());
-        res.setYear(student.getYear());
-        res.setCreatedAt(student.getCreatedAt());
-        res.setUpdatedAt(student.getUpdatedAt());
-        return res;
+        return new StudentResponse(student);
     }
 
 }

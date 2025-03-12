@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import com.example.student_management_backend.util.SecurityUtil;
 
 @Entity
 @Table(name = "users")
@@ -23,33 +22,13 @@ public class User {
     @NotBlank(message = "password không được để trống")
     private String password;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String refreshToken;
-
     private Instant createdAt;
     private Instant updatedAt;
-    private String createdBy;
-    private String updatedBy;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-
-        this.createdAt = Instant.now();
-    }
-
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-
-        this.updatedAt = Instant.now();
-    }
+    private String resetToken;
+    private Instant resetTokenExpiry;
 }

@@ -1,47 +1,68 @@
 package com.example.student_management_backend.service;
 
-import java.security.Permission;
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Role;
+import com.example.student_management_backend.dto.RoleDTO;
+import com.example.student_management_backend.dto.reponse.role.RoleResponse;
 import com.example.student_management_backend.repository.RoleRepository;
 
+@Service
 public class RoleService {
-    private final RoleRepository roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    // Tạo mới role
+    public RoleResponse createRole(RoleDTO roleDTO) {
+        if (roleRepository.existsByRoleName(roleDTO.getRoleName())) {
+            throw new RuntimeException("Role name đã tồn tại!");
+        }
+        Role role = new Role();
+        role.setRoleName(roleDTO.getRoleName());
+        role.setCreatedAt(Instant.now());
+        role.setUpdatedAt(Instant.now());
+
+        role = roleRepository.save(role);
+        return new RoleResponse(role);
     }
 
-    public boolean existByName(String roleName) {
-        return this.roleRepository.existsByName(roleName);
+    public List<RoleResponse> getAllRoles() {
+        return roleRepository.findAll().stream()
+                .map(RoleResponse::new)
+                .collect(Collectors.toList());
     }
 
-    public Role create(Role r) {
-        return this.roleRepository.save(r);
+    public RoleResponse getRoleById(long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
+        return new RoleResponse(role);
     }
 
-    public Role fetchById(long id) {
-        Optional<Role> roleOptional = this.roleRepository.findById(id);
-        if (roleOptional.isPresent())
-            return roleOptional.get();
-        return null;
+    public RoleResponse updateRole(long id, RoleDTO roleDTO) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
+
+        role.setRoleName(roleDTO.getRoleName());
+        role.setUpdatedAt(Instant.now());
+
+        role = roleRepository.save(role);
+        return new RoleResponse(role);
     }
 
-    public Role update(Role r) {
-        Role roleDB = this.fetchById(r.getId());
+    public void deleteRole(long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
 
-        roleDB.setRoleName(r.getRoleName());
-        roleDB.setPermissions(r.getPermissions());
-        roleDB = this.roleRepository.save(roleDB);
-        return roleDB;
-    }
+        if (!role.getUsers().isEmpty()) {
+            throw new RuntimeException("Không thể xóa role này vì đang kết nối với user");
+        }
 
-    public void delete(long id) {
-        this.roleRepository.deleteById(id);
+        roleRepository.delete(role);
     }
 }
