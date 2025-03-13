@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentRepository extends JpaRepository<Students, Integer> {
     Optional<Students> findByEmail(String email);
+
+    Students findByUserId(int userId);
 }

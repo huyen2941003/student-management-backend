@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/roles/**").permitAll()
+                        .requestMatchers("/api/roles/**").authenticated()
                         .requestMatchers("/api/majors/**").permitAll()
                         .requestMatchers("/api/departments/**").permitAll()
                         .requestMatchers("/api/students/**").authenticated()
@@ -54,7 +54,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable());
-
         return http.build();
     }
 }

@@ -52,7 +52,7 @@ public class Students extends BaseEntity {
     Departments departments;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, unique = true)
+    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false, unique = true)
     private User user;
 
 }

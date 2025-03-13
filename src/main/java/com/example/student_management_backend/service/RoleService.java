@@ -1,10 +1,10 @@
 package com.example.student_management_backend.service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Role;
@@ -18,7 +18,7 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    // Tạo mới role
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse createRole(RoleRequest roleRequest) {
         if (roleRepository.existsByRole(roleRequest.getRoleName())) {
             throw new RuntimeException("Role name đã tồn tại!");
@@ -29,18 +29,21 @@ public class RoleService {
         return new RoleResponse(role);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream()
                 .map(RoleResponse::new)
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("isAuthenticated()")
     public RoleResponse getRoleById(long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
         return new RoleResponse(role);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse updateRole(long id, RoleRequest roleRequest) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
@@ -51,13 +54,10 @@ public class RoleService {
         return new RoleResponse(role);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteRole(long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
-
-        if (!role.getUsers().isEmpty()) {
-            throw new RuntimeException("Không thể xóa role này vì đang kết nối với user");
-        }
 
         roleRepository.delete(role);
     }
