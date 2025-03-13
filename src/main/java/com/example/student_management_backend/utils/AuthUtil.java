@@ -5,6 +5,7 @@ package com.example.student_management_backend.utils;
 import com.example.student_management_backend.domain.User;
 import com.example.student_management_backend.repository.StudentRepository;
 import com.example.student_management_backend.repository.UserRepository;
+import com.example.student_management_backend.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,10 +17,10 @@ public class AuthUtil {
     @Autowired
     private  UserRepository userRepository;
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentService studentService;
     public Integer loggedInStudentId() throws Exception {
         Long userId = loggedInUserId();
-        return studentRepository.findByUserId(Math.toIntExact(userId)).getId();
+        return studentService.getStudentById(Math.toIntExact(userId)).getId();
     }
 
     public Long loggedInUserId() throws Exception {
