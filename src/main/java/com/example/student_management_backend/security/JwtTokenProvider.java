@@ -1,54 +1,32 @@
 package com.example.student_management_backend.security;
 
-import io.jsonwebtoken.security.Keys;
-
-import org.springframework.security.core.Authentication;
+import com.example.student_management_backend.security.CustomUserDetails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
+import io.jsonwebtoken.*;
 
 import java.util.Date;
-
-import javax.crypto.SecretKey;
-
-import io.jsonwebtoken.*;
-import java.security.Key;
 
 @Component
 public class JwtTokenProvider {
 
-    private final SecretKey jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final SecretKey jwtSecret;
     private final long jwtExpirationInMs = 3600000; // 1 hour
 
-    public String generateToken(CustomUserDetails userDetails) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret) {
+        this.jwtSecret = Keys.hmacShaKeyFor(secret.getBytes()); // Chuyển thành SecretKey
+    }
 
+    public String generateToken(CustomUserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .claim("role", userDetails.getAuthorities().iterator().next().getAuthority()) // Thêm role vào payload
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
+                .claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
                 .signWith(jwtSecret)
                 .compact();
-    }
-
-    public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
-    }
-
-    public String getRoleFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.get("role", String.class);
     }
 
     public boolean validateToken(String token) {
@@ -58,8 +36,26 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (Exception ex) {
+        } catch (JwtException ex) {
             return false;
         }
+    }
+
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtSecret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public String getRoleFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtSecret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 }
