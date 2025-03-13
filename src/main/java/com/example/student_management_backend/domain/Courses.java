@@ -24,4 +24,5 @@ public class Courses {
     @ManyToOne
     @JoinColumn(name = "majorId", referencedColumnName = "id")
     Majors majors;
+
 }

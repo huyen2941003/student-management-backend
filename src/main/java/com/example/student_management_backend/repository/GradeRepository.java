@@ -24,4 +24,6 @@ public interface GradeRepository extends JpaRepository<Grades, Integer> {
             "ORDER BY c.semester")
     List<Object[]> getRawGpaBySemester(int studentId);
 
+    List<Grades> findByStudents_IdAndCourses_NameContainingIgnoreCase(Integer studentId, String keyword);
+
 }

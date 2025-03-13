@@ -1,15 +1,14 @@
 package com.example.student_management_backend.controller;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +36,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
+    @Autowired
     public AuthController(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
@@ -92,39 +92,28 @@ public class AuthController {
         Students student = studentRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên với email: " + email));
 
+        // Lấy user từ student
         User user = student.getUser();
 
-        String resetToken = UUID.randomUUID().toString();
-        LocalDateTime resetTokenExpiry = LocalDateTime.now().plusHours(1);
-
-        user.setResetToken(resetToken);
-        user.setResetTokenExpiry(resetTokenExpiry);
-        userRepository.save(user);
-
+        String resetToken = generateResetToken(user);
         String resetLink = "" + resetToken;
-
         emailService.sendPasswordResetEmail(student.getEmail(), resetLink);
 
         return ResponseEntity.ok("Email đặt lại mật khẩu đã được gửi.");
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private String generateResetToken(User user) {
+        return UUID.randomUUID().toString();
+    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        User user = userRepository.findByResetToken(token)
+        // Tìm user bằng token
+        User user = userRepository.findByFcmToken(token)
                 .orElseThrow(() -> new RuntimeException("Token không hợp lệ"));
 
-        if (user.getResetTokenExpiry() != null && user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Token đã hết hạn");
-        }
-
-        String encodedPassword = passwordEncoder.encode(newPassword);
-
-        user.setPassword(encodedPassword);
-        user.setResetToken(null);
-        user.setResetTokenExpiry(null);
+        user.setPassword(newPassword);
+        user.setFcmToken(null);
         userRepository.save(user);
 
         return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");

@@ -11,7 +11,7 @@ import com.example.student_management_backend.service.DepartmentsService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/departments")
+@RequestMapping("/api/admin/departments")
 public class DepartmentController {
 
     @Autowired

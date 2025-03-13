@@ -13,4 +13,7 @@ public interface CourseRepository extends JpaRepository<Courses, Integer> {
             "WHERE u.id = :userId")
     List<Courses> getCourses(int userId);
 
+    // tìm môn học bằng tên
+    List<Courses> findByNameContainingIgnoreCase(String keyword);
+
 }

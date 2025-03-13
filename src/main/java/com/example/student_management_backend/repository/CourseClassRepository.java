@@ -13,5 +13,7 @@ public interface CourseClassRepository extends JpaRepository<CourseClass, Intege
             "FROM CourseClass e " +
             "JOIN e.courses cl " +
             "WHERE e.id IN (SELECT en.classes.id FROM Enrollments en WHERE en.students.id = :userId) ")
+
+    // tìm lớp học bằng userId người dùng
     List<CourseClassScheduleResponse> getCourseChedule(int userId);
 }

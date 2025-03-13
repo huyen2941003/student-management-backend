@@ -19,6 +19,7 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "classId", nullable = false)
     private CourseClass courses; // Lớp học phần
@@ -31,5 +32,6 @@ public class Schedule {
 
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
+
     private String room;
 }

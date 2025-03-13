@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.student_management_backend.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,5 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByFcmToken(String fcmToken);
 
     Optional<User> findByResetToken(String resetToken);
+
+    List<User> findByUsernameContainingIgnoreCase(String keyword);
 
 }

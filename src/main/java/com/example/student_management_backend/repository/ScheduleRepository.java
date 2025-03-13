@@ -22,4 +22,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
                         @Param("studentId") int studentId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate);
+
+        // Tìm kiếm lịch học dựa trên tên môn học và ngày
+        List<Schedule> findByCourses_Courses_NameContainingIgnoreCaseAndDate(String keyword, LocalDate date);
 }

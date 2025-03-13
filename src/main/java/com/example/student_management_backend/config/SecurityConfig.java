@@ -50,7 +50,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/majors/**").permitAll()
                         .requestMatchers("/api/departments/**").permitAll()
                         .requestMatchers("/api/students/**").authenticated()
-                        .requestMatchers("/api/search/**").authenticated()
+                        .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers("/api/search/**").permitAll()
+
+                        .requestMatchers("/api/v1/annoucements/**").permitAll()
+                        .requestMatchers("/api/v1/grades/**").permitAll()
+                        .requestMatchers("/api/v1/courses/**").permitAll()
+                        .requestMatchers("/api/v1/exams/**").permitAll()
+                        .requestMatchers("/api/v1/schedules/**").permitAll()
+
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable());

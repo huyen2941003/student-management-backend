@@ -43,6 +43,8 @@ public class Students extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
+    private String avatar;
+
     @ManyToOne
     @JoinColumn(name = "majorId", referencedColumnName = "id")
     Majors majors;
@@ -51,7 +53,7 @@ public class Students extends BaseEntity {
     @JoinColumn(name = "departmentId", referencedColumnName = "id")
     Departments departments;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false, unique = true)
     private User user;
 

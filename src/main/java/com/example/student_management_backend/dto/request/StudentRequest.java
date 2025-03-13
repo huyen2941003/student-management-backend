@@ -23,4 +23,6 @@ public class StudentRequest {
     private StatusEnum status;
     private Integer majorId;
     private Integer departmentId;
+    private String avatar;
+
 }

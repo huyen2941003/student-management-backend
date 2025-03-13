@@ -26,6 +26,7 @@ public class StudentResponse {
     private String majorName;
     private String departmentName;
     private String username;
+    private String avatar;
 
     public StudentResponse(Students student) {
         this.id = student.getId();
@@ -36,6 +37,7 @@ public class StudentResponse {
         this.phone = student.getPhone();
         this.address = student.getAddress();
         this.status = student.getStatus();
+        this.avatar = student.getAvatar();
         this.majorName = student.getMajors() != null ? student.getMajors().getMajorName() : null;
         this.departmentName = student.getDepartments() != null ? student.getDepartments().getDepartmentName() : null;
         this.username = student.getUser() != null ? student.getUser().getUsername() : null;
