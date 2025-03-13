@@ -1,8 +1,12 @@
 package com.example.student_management_backend.service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,7 @@ import com.example.student_management_backend.repository.UserRepository;
 import com.example.student_management_backend.util.constant.StatusEnum;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     @Autowired
@@ -44,6 +49,7 @@ public class AuthService {
     @Autowired
     private DepartmentsRepository departmentsRepository;
 
+    private final Random random = new Random();
     public RegisterResponse register(RegisterRequest registerRequest) {
         // Kiểm tra username đã tồn tại chưa
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
@@ -56,13 +62,18 @@ public class AuthService {
 
         // Tạo đối tượng User từ RegisterRequest
         User user = new User();
-        user.setUsername(registerRequest.getUsername());
+        LocalDateTime createdAt = LocalDateTime.now();
+        String username = generateStudentId(createdAt);
+        user.setUsername(username);
+
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(role);
 
         // Lưu user vào database
-        userRepository.save(user);
+        User savedUser = userRepository.save(user); // Lưu User trước
+        System.out.println("User ID after save: " + savedUser.getId()); // Debug
 
+        System.out.println("User ID after save: " + user.getId());
         // Tìm majors và departments từ request
         Majors major = majorsRepository.findById(registerRequest.getMajorId())
                 .orElseThrow(() -> new RuntimeException("Major not found with id: " + registerRequest.getMajorId()));
@@ -80,7 +91,7 @@ public class AuthService {
                 .phone(registerRequest.getPhone())
                 .address(registerRequest.getAddress())
                 .status(StatusEnum.ACTIVE)
-                .user(user)
+                .user(savedUser)
                 .majors(major)
                 .departments(department)
                 .build();
@@ -91,4 +102,11 @@ public class AuthService {
         // Trả về response
         return new RegisterResponse("Đăng ký tài khoản cho sinh viên thành công!", user.getUsername());
     }
+    private String generateStudentId(LocalDateTime createdAt) {
+        String year = createdAt.format(DateTimeFormatter.ofPattern("yyyy"));
+        int randomDigits = 100000 + random.nextInt(900000); // Đảm bảo có đủ 6 chữ số
+
+        return year + randomDigits;
+    }
+
 }

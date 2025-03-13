@@ -3,7 +3,6 @@ package com.example.student_management_backend.utils;
 
 
 import com.example.student_management_backend.domain.User;
-import com.example.student_management_backend.repository.StudentRepository;
 import com.example.student_management_backend.repository.UserRepository;
 import com.example.student_management_backend.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,5 @@ public class AuthUtil {
                 .orElseThrow(() -> new Exception("Username dont exits "));
         return Long.valueOf(user.getId());
     }
-
-
 
 }

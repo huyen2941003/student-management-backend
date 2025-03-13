@@ -51,7 +51,7 @@ public class Students extends BaseEntity {
     @JoinColumn(name = "departmentId", referencedColumnName = "id")
     Departments departments;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false, unique = true)
     private User user;
 
