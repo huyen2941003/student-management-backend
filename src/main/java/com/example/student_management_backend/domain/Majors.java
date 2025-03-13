@@ -22,6 +22,6 @@ public class Majors {
     @JoinColumn(name = "departmentId", referencedColumnName = "id")
     Departments departments;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EnrollmentsClass> enrollmentsClasses;
+//    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<EnrollmentsClass> enrollmentsClasses;
 }

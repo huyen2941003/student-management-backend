@@ -4,15 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+import com.example.student_management_backend.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.student_management_backend.domain.Departments;
-import com.example.student_management_backend.domain.Majors;
-import com.example.student_management_backend.domain.Role;
-import com.example.student_management_backend.domain.Students;
-import com.example.student_management_backend.domain.User;
 import com.example.student_management_backend.dto.request.RegisterRequest;
 import com.example.student_management_backend.dto.response.RegisterResponse;
 import com.example.student_management_backend.repository.DepartmentsRepository;
@@ -121,7 +117,7 @@ public class AuthService {
                                 .email(registerRequest.getEmail())
                                 .phone(registerRequest.getPhone())
                                 .address(registerRequest.getAddress())
-                                .status(StatusEnum.ACTIVE)
+                                .status(Status.Active)
                                 .user(savedUser)
                                 .majors(major)
                                 .departments(department)

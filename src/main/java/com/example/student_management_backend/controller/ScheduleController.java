@@ -37,7 +37,7 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Schedule>> getAllSchedule() {
+    public ResponseEntity<List<ScheduleResponse>> getAllSchedule() {
         return ResponseEntity.ok(scheduleService.getAllSchedule());
     }
 

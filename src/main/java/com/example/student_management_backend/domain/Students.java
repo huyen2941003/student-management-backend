@@ -32,7 +32,7 @@ public class Students extends BaseEntity {
     private LocalDate dob;
 
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+    private Gender gender;
 
     private String email;
 
@@ -41,7 +41,7 @@ public class Students extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private Status status;
 
     private String avatar;
 

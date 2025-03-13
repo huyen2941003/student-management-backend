@@ -24,8 +24,10 @@ public class ScheduleService {
 
     public ScheduleResponse createSchedule(ScheduleCourseRequest request) throws Exception {
         Schedule schedule = new Schedule();
-        CourseClass courseClass = courseClassRepository.findById(request.getCoursesId()).orElseThrow(
-                () -> new Exception("CourseClass dont exists"));
+        CourseClass courseClass = courseClassRepository.
+                findById(request.getCoursesId()).orElseThrow(
+                () -> new Exception("CourseClass dont exists")
+        );
         schedule.setCourses(courseClass);
         schedule.setStartTime(request.getStartTime());
         schedule.setEndTime(request.getEndTime());
@@ -35,13 +37,17 @@ public class ScheduleService {
         return new ScheduleResponse(schedule);
     }
 
-    public List<Schedule> getAllSchedule() {
-        return scheduleRepository.findAll();
+    public List<ScheduleResponse> getAllSchedule() {
+        List<Schedule> schedules = scheduleRepository.findAll();
+        return schedules.stream()
+                .map(ScheduleResponse::new)
+                .toList();
     }
 
     public void deleteScheduleById(int id) throws Exception {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
-                () -> new Exception("K tồn tại schedule with id:" + id));
+                ()-> new Exception("Schedule dont exist with id:"+id)
+        );
         scheduleRepository.delete(schedule);
     }
 }

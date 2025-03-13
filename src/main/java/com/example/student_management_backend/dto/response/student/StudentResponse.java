@@ -1,6 +1,9 @@
 package com.example.student_management_backend.dto.response.student;
 
 import java.time.LocalDate;
+
+import com.example.student_management_backend.domain.Gender;
+import com.example.student_management_backend.domain.Status;
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.util.constant.GenderEnum;
 import com.example.student_management_backend.util.constant.StatusEnum;
@@ -18,11 +21,11 @@ public class StudentResponse {
     private Integer id;
     private String fullName;
     private LocalDate dob;
-    private GenderEnum gender;
+    private Gender gender;
     private String email;
     private String phone;
     private String address;
-    private StatusEnum status;
+    private Status status;
     private String majorName;
     private String departmentName;
     private String username;
