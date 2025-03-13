@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StudentRepository extends JpaRepository<Students, Integer> {
     Optional<Students> findByEmail(String email);
+
+    Students findByUserId(int userId);
 }

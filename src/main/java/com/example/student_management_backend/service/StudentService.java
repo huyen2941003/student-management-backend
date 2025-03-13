@@ -67,4 +67,8 @@ public class StudentService {
 
         return new StudentResponse(student);
     }
+    public Students getStudentByUserId(int userId)
+    {
+        return studentRepository.findByUserId(userId);
+    }
 }
