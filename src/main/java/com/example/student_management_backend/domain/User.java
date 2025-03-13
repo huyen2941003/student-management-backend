@@ -1,5 +1,7 @@
 package com.example.student_management_backend.domain;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +27,8 @@ public class User extends BaseEntity {
     private Role role;
 
     private String fcmToken;
+
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
 
 }

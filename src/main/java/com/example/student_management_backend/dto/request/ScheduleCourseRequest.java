@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 public class ScheduleCourseRequest {
-    private int coursesId; //classCourse
+    private int coursesId;
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;

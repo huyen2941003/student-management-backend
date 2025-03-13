@@ -1,4 +1,4 @@
-package com.example.student_management_backend.dto;
+package com.example.student_management_backend.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleDTO {
+public class RoleRequest {
     @NotBlank(message = "Role name không được để trống")
     private String roleName;
 }

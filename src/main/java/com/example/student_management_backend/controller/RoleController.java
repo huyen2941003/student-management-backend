@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.student_management_backend.dto.RoleDTO;
+import com.example.student_management_backend.dto.request.RoleRequest;
 import com.example.student_management_backend.dto.response.role.RoleResponse;
 import com.example.student_management_backend.service.RoleService;
 
@@ -27,8 +27,8 @@ public class RoleController {
 
     // Tạo mới role
     @PostMapping
-    public ResponseEntity<?> createRole(@RequestBody RoleDTO roleDTO) {
-        RoleResponse response = roleService.createRole(roleDTO);
+    public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {
+        RoleResponse response = roleService.createRole(roleRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -49,8 +49,8 @@ public class RoleController {
     // Cập nhật role
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRole(@PathVariable long id, @RequestBody RoleDTO roleDTO) {
-        RoleResponse response = roleService.updateRole(id, roleDTO);
+    public ResponseEntity<?> updateRole(@PathVariable long id, @RequestBody RoleRequest roleRequest) {
+        RoleResponse response = roleService.updateRole(id, roleRequest);
         return ResponseEntity.ok(response);
     }
 

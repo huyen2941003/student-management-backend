@@ -17,13 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @NotBlank(message = "name không được để trống")
-    private String role;
-
-    private Instant createdAt;
-    private Instant updatedAt;
+    Integer id;
+    String role;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @JsonIgnore

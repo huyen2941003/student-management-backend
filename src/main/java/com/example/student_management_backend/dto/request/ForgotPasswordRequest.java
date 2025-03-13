@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ForgotPasswordRequest {
-    @NotBlank(message = "Username cannot be blank")
+    @NotBlank(message = "Username không thể trống")
     private String username;
 }

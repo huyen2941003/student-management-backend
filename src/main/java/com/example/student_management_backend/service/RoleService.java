@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Role;
-import com.example.student_management_backend.dto.RoleDTO;
+import com.example.student_management_backend.dto.request.RoleRequest;
 import com.example.student_management_backend.dto.response.role.RoleResponse;
 import com.example.student_management_backend.repository.RoleRepository;
 
@@ -19,15 +19,12 @@ public class RoleService {
     private RoleRepository roleRepository;
 
     // Tạo mới role
-    public RoleResponse createRole(RoleDTO roleDTO) {
-        if (roleRepository.existsByRole(roleDTO.getRoleName())) {
+    public RoleResponse createRole(RoleRequest roleRequest) {
+        if (roleRepository.existsByRole(roleRequest.getRoleName())) {
             throw new RuntimeException("Role name đã tồn tại!");
         }
         Role role = new Role();
-        role.setRole(roleDTO.getRoleName());
-        role.setCreatedAt(Instant.now());
-        role.setUpdatedAt(Instant.now());
-
+        role.setRole(roleRequest.getRoleName());
         role = roleRepository.save(role);
         return new RoleResponse(role);
     }
@@ -44,12 +41,11 @@ public class RoleService {
         return new RoleResponse(role);
     }
 
-    public RoleResponse updateRole(long id, RoleDTO roleDTO) {
+    public RoleResponse updateRole(long id, RoleRequest roleRequest) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy role có id: " + id));
 
-        role.setRole(roleDTO.getRoleName());
-        role.setUpdatedAt(Instant.now());
+        role.setRole(roleRequest.getRoleName());
 
         role = roleRepository.save(role);
         return new RoleResponse(role);

@@ -1,7 +1,5 @@
 package com.example.student_management_backend.domain;
 
-import java.io.ObjectInputFilter.Status;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +9,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "enrollmentclass")
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnrollmentsClass {

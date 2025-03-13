@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.student_management_backend.dto.StudentDTO;
+import com.example.student_management_backend.dto.request.StudentRequest;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.service.StudentService;
 
@@ -28,7 +28,7 @@ public class StudentController {
 
     // Cập nhật thông tin sinh viên
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStudent(@PathVariable Integer id, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<?> updateStudent(@PathVariable Integer id, @RequestBody StudentRequest studentDTO) {
         try {
             StudentResponse response = studentService.updateStudent(id, studentDTO);
             return ResponseEntity.ok(response);

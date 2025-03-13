@@ -25,6 +25,7 @@ public class StudentResponse {
     private StatusEnum status;
     private String majorName;
     private String departmentName;
+    private String username;
 
     public StudentResponse(Students student) {
         this.id = student.getId();
@@ -37,5 +38,6 @@ public class StudentResponse {
         this.status = student.getStatus();
         this.majorName = student.getMajors() != null ? student.getMajors().getMajorName() : null;
         this.departmentName = student.getDepartments() != null ? student.getDepartments().getDepartmentName() : null;
+        this.username = student.getUser() != null ? student.getUser().getUsername() : null;
     }
 }

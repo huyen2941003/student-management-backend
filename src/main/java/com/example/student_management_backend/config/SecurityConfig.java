@@ -45,7 +45,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/roles/**").permitAll()
+                        .requestMatchers("/api/majors/**").permitAll()
+                        .requestMatchers("/api/departments/**").permitAll()
                         .requestMatchers("/api/students/**").authenticated()
                         .requestMatchers("/api/search/**").authenticated()
                         .anyRequest().authenticated())

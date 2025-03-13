@@ -1,5 +1,6 @@
 package com.example.student_management_backend.controller;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,38 +88,43 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam String email) {
-        // Tìm student bằng email
+
         Students student = studentRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên với email: " + email));
 
-        // Lấy user từ student
         User user = student.getUser();
 
-        // Tạo liên kết đặt lại mật khẩu (ví dụ: sử dụng token)
-        String resetToken = generateResetToken(user);
-        String resetLink = "http://yourwebsite.com/reset-password?token=" + resetToken;
+        String resetToken = UUID.randomUUID().toString();
+        LocalDateTime resetTokenExpiry = LocalDateTime.now().plusHours(1);
 
-        // Gửi email chứa liên kết đặt lại mật khẩu
+        user.setResetToken(resetToken);
+        user.setResetTokenExpiry(resetTokenExpiry);
+        userRepository.save(user);
+
+        String resetLink = "" + resetToken;
+
         emailService.sendPasswordResetEmail(student.getEmail(), resetLink);
 
         return ResponseEntity.ok("Email đặt lại mật khẩu đã được gửi.");
     }
 
-    private String generateResetToken(User user) {
-        // Logic để tạo token đặt lại mật khẩu
-        // Ví dụ: sử dụng UUID hoặc JWT
-        return UUID.randomUUID().toString();
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        // Tìm user bằng token
-        User user = userRepository.findByFcmToken(token)
+        User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token không hợp lệ"));
 
-        // Cập nhật mật khẩu mới
-        user.setPassword(newPassword);
-        user.setFcmToken(null);
+        if (user.getResetTokenExpiry() != null && user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token đã hết hạn");
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        user.setPassword(encodedPassword);
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
         userRepository.save(user);
 
         return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");

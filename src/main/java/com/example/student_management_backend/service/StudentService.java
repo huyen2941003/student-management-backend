@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.student_management_backend.domain.Departments;
 import com.example.student_management_backend.domain.Majors;
 import com.example.student_management_backend.domain.Students;
-import com.example.student_management_backend.dto.StudentDTO;
+import com.example.student_management_backend.dto.request.StudentRequest;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.repository.DepartmentsRepository;
 import com.example.student_management_backend.repository.MajorsRepository;
@@ -32,31 +32,32 @@ public class StudentService {
     }
 
     // Cập nhật thông tin sinh viên
-    public StudentResponse updateStudent(Integer id, StudentDTO studentDTO) {
+    public StudentResponse updateStudent(Integer id, StudentRequest studentRequest) {
         Students student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không có sinh viên nào có id: " + id));
 
         // Cập nhật thông tin từ DTO
-        student.setFullName(studentDTO.getFullName());
-        student.setDob(studentDTO.getDob());
-        student.setGender(studentDTO.getGender());
-        student.setEmail(studentDTO.getEmail());
-        student.setPhone(studentDTO.getPhone());
-        student.setAddress(studentDTO.getAddress());
+        student.setFullName(studentRequest.getFullName());
+        student.setDob(studentRequest.getDob());
+        student.setGender(studentRequest.getGender());
+        student.setEmail(studentRequest.getEmail());
+        student.setPhone(studentRequest.getPhone());
+        student.setAddress(studentRequest.getAddress());
 
         // Cập nhật Major nếu có thay đổi
-        if (studentDTO.getMajorId() != null) {
-            Majors major = majorsRepository.findById(studentDTO.getMajorId())
+        if (studentRequest.getMajorId() != null) {
+            Majors major = majorsRepository.findById(studentRequest.getMajorId())
                     .orElseThrow(() -> new RuntimeException(
-                            "Không tìm thấy chuyên ngành với id: " + studentDTO.getMajorId()));
+                            "Không tìm thấy chuyên ngành với id: " + studentRequest.getMajorId()));
             student.setMajors(major);
         }
 
         // Cập nhật Department nếu có thay đổi
-        if (studentDTO.getDepartmentId() != null) {
-            Departments department = departmentsRepository.findById(studentDTO.getDepartmentId())
+        if (studentRequest.getDepartmentId() != null) {
+            Departments department = departmentsRepository.findById(studentRequest.getDepartmentId())
                     .orElseThrow(
-                            () -> new RuntimeException("Không tìm thấy khoa với id: " + studentDTO.getDepartmentId()));
+                            () -> new RuntimeException(
+                                    "Không tìm thấy khoa với id: " + studentRequest.getDepartmentId()));
             student.setDepartments(department);
         }
 
