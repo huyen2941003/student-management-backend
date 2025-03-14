@@ -1,4 +1,4 @@
-package com.example.student_management_backend.domain;
+package com.example.student_management_backend.dto.request;
 
 import java.time.LocalDate;
 

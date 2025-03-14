@@ -1,11 +1,6 @@
 package com.example.student_management_backend.service;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +12,11 @@ import com.example.student_management_backend.domain.Departments;
 import com.example.student_management_backend.domain.Majors;
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.dto.request.StudentRequest;
-import com.example.student_management_backend.dto.response.role.RoleResponse;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.repository.DepartmentsRepository;
 import com.example.student_management_backend.repository.MajorsRepository;
 import com.example.student_management_backend.repository.StudentRepository;
 import com.example.student_management_backend.service.file.FileStorageService;
-import com.example.student_management_backend.util.error.FileStorageException;
-
-import io.jsonwebtoken.io.IOException;
 
 @Service
 public class StudentService {

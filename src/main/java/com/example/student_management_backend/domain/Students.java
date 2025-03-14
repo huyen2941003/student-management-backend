@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.example.student_management_backend.util.constant.GenderEnum;
-import com.example.student_management_backend.util.constant.StatusEnum;
-
 import java.time.LocalDate;
 
 @Entity
@@ -32,7 +29,7 @@ public class Students extends BaseEntity {
     private LocalDate dob;
 
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+    private Gender gender;
 
     private String email;
 
@@ -41,7 +38,7 @@ public class Students extends BaseEntity {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private Status status;
 
     private String avatar;
 

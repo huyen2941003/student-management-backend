@@ -26,6 +26,7 @@ public class RoleController {
     private RoleService roleService;
 
     // Tạo mới role
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> createRole(@RequestBody RoleRequest roleRequest) {
         RoleResponse response = roleService.createRole(roleRequest);
@@ -33,6 +34,7 @@ public class RoleController {
     }
 
     // Lấy danh sách tất cả roles
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllRoles() {
         List<RoleResponse> response = roleService.getAllRoles();
@@ -40,6 +42,7 @@ public class RoleController {
     }
 
     // Lấy role theo ID
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getRoleById(@PathVariable long id) {
         RoleResponse response = roleService.getRoleById(id);

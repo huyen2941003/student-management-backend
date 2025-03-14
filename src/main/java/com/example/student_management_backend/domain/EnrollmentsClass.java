@@ -19,7 +19,7 @@ public class EnrollmentsClass {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "major_id", nullable = false)
+    @JoinColumn(name = "majorId", nullable = false)
     private Majors major;
 
     @Column(name = "name", nullable = false)

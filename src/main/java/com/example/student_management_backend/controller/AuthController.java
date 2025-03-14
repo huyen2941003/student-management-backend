@@ -1,14 +1,16 @@
 package com.example.student_management_backend.controller;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,11 +64,13 @@ public class AuthController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         return ResponseEntity.ok("Logout thành công");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
@@ -96,24 +100,33 @@ public class AuthController {
         User user = student.getUser();
 
         String resetToken = generateResetToken(user);
-        String resetLink = "" + resetToken;
+        String resetLink = "http://yourdomain.com/reset-password?token=" + resetToken;
         emailService.sendPasswordResetEmail(student.getEmail(), resetLink);
 
         return ResponseEntity.ok("Email đặt lại mật khẩu đã được gửi.");
     }
 
     private String generateResetToken(User user) {
-        return UUID.randomUUID().toString();
+        String resetToken = UUID.randomUUID().toString();
+        user.setResetToken(resetToken);
+        user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
+        userRepository.save(user);
+        return resetToken;
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
         // Tìm user bằng token
-        User user = userRepository.findByFcmToken(token)
+        User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token không hợp lệ"));
 
-        user.setPassword(newPassword);
-        user.setFcmToken(null);
+        // Cập nhật mật khẩu mới
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        // Mã hóa mật khẩu
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        user.setResetToken(null);
         userRepository.save(user);
 
         return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");

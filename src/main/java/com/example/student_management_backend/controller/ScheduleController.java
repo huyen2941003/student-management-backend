@@ -1,12 +1,12 @@
 package com.example.student_management_backend.controller;
 
-import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.request.ScheduleCourseRequest;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import com.example.student_management_backend.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,6 +18,7 @@ import java.util.List;
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{studentId}")
     public ResponseEntity<List<ScheduleResponse>> getSchedule(
             @PathVariable int studentId,
@@ -29,18 +30,20 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.getSchedule(studentId, start, end));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<ScheduleResponse> createSchedule
-            (@RequestBody ScheduleCourseRequest request) throws Exception {
+    public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody ScheduleCourseRequest request)
+            throws Exception {
         ScheduleResponse scheduleResponse = scheduleService.createSchedule(request);
         return new ResponseEntity<>(scheduleResponse, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Schedule>> getAllSchedule() {
+    public ResponseEntity<List<ScheduleResponse>> getAllSchedule() {
         return ResponseEntity.ok(scheduleService.getAllSchedule());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSchedule(@PathVariable int id) {
         try {
@@ -55,6 +58,5 @@ public class ScheduleController {
                     .body("An error occurred while deleting the schedule");
         }
     }
-
 
 }

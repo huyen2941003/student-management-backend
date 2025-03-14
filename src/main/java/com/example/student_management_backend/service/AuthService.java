@@ -4,15 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+import com.example.student_management_backend.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.student_management_backend.domain.Departments;
-import com.example.student_management_backend.domain.Majors;
-import com.example.student_management_backend.domain.Role;
-import com.example.student_management_backend.domain.Students;
-import com.example.student_management_backend.domain.User;
 import com.example.student_management_backend.dto.request.RegisterRequest;
 import com.example.student_management_backend.dto.response.RegisterResponse;
 import com.example.student_management_backend.repository.DepartmentsRepository;
@@ -20,7 +16,6 @@ import com.example.student_management_backend.repository.MajorsRepository;
 import com.example.student_management_backend.repository.RoleRepository;
 import com.example.student_management_backend.repository.StudentRepository;
 import com.example.student_management_backend.repository.UserRepository;
-import com.example.student_management_backend.util.constant.StatusEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,8 +44,8 @@ public class AuthService {
         private final Random random = new Random();
 
         public RegisterResponse register(RegisterRequest registerRequest) {
-                // Kiểm tra nếu username được truyền vào và roleId = 1
-                if (registerRequest.getUsername() != null && registerRequest.getRoleId() == 1) {
+                // Kiểm tra nếu username được truyền vào và roleName = "ROLE_ADMIN"
+                if (registerRequest.getUsername() != null && "ROLE_ADMIN".equals(registerRequest.getRoleName())) {
                         // Chỉ đăng ký User
                         return registerUserOnly(registerRequest);
                 } else {
@@ -65,10 +60,10 @@ public class AuthService {
                         throw new RuntimeException("Username đã tồn tại!");
                 }
 
-                // Lấy role từ database
-                Role role = roleRepository.findById(registerRequest.getRoleId())
+                // Lấy role từ database dựa trên roleName
+                Role role = roleRepository.findByRole(registerRequest.getRoleName())
                                 .orElseThrow(() -> new RuntimeException(
-                                                "Role not found with id: " + registerRequest.getRoleId()));
+                                                "Role not found with name: " + registerRequest.getRoleName()));
 
                 // Tạo và lưu User
                 User user = new User();
@@ -91,10 +86,10 @@ public class AuthService {
                         throw new RuntimeException("Username đã tồn tại!");
                 }
 
-                // Lấy role từ database
-                Role role = roleRepository.findById(registerRequest.getRoleId())
+                // Lấy role từ database dựa trên roleName
+                Role role = roleRepository.findByRole(registerRequest.getRoleName())
                                 .orElseThrow(() -> new RuntimeException(
-                                                "Role not found with id: " + registerRequest.getRoleId()));
+                                                "Role not found with name: " + registerRequest.getRoleName()));
 
                 // Tạo và lưu User
                 User user = new User();
@@ -121,7 +116,7 @@ public class AuthService {
                                 .email(registerRequest.getEmail())
                                 .phone(registerRequest.getPhone())
                                 .address(registerRequest.getAddress())
-                                .status(StatusEnum.ACTIVE)
+                                .status(Status.Active)
                                 .user(savedUser)
                                 .majors(major)
                                 .departments(department)

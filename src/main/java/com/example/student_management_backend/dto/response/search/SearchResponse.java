@@ -1,9 +1,6 @@
 package com.example.student_management_backend.dto.response.search;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import com.example.student_management_backend.controller.AnnoucementsController;
 import com.example.student_management_backend.domain.Announcements;
 import com.example.student_management_backend.domain.Courses;
 import com.example.student_management_backend.domain.Exams;

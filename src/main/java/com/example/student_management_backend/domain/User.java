@@ -31,4 +31,5 @@ public class User extends BaseEntity {
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
 
+
 }
