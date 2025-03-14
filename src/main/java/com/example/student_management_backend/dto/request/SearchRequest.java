@@ -1,4 +1,6 @@
-package com.example.student_management_backend.dto.request;
+package com.example.student_management_backend.domain;
+
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +9,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class SearchRequest {
-    private String subjectName;
-    private String subjectCode;
-    private Integer studentId;
+    private String keyword; // Từ khóa tìm kiếm
+    private String type; // Loại tìm kiếm: course, schedule, exam, grade, notification, account
+    private Integer studentId; // ID sinh viên (dùng cho bảng điểm)
+    private LocalDate date; // Ngày (dùng cho lịch học, lịch thi)
 }

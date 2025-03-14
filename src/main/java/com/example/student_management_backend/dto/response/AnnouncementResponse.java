@@ -15,4 +15,5 @@ public class AnnouncementResponse {
     private String content;
     private LocalDateTime createdAt;
     private String userName;
+
 }

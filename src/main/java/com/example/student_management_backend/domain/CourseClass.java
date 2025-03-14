@@ -1,4 +1,5 @@
 package com.example.student_management_backend.domain;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,13 +16,13 @@ public class CourseClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(name="created_date" ,nullable = false)
+    @Column(name = "created_date", nullable = false)
     LocalDateTime createdDate;
 
-    @Column(name = "max_student",nullable = false)
+    @Column(name = "max_student", nullable = false)
     int maxStudent;
     @ManyToOne
-    @JoinColumn(name="courseId",referencedColumnName = "id")
+    @JoinColumn(name = "courseId", referencedColumnName = "id")
     Courses courses;
     int semester;
 

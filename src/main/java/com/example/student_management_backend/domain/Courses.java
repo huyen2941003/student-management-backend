@@ -1,5 +1,7 @@
 package com.example.student_management_backend.domain;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor
 public class Courses {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -25,4 +28,6 @@ public class Courses {
     @JoinColumn(name = "majorId", referencedColumnName = "id")
     Majors majors;
 
+    @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Grades> grades;
 }

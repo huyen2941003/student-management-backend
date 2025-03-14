@@ -12,21 +12,29 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class Grades {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="midterm_score")
+
+    @Column(name = "midterm_score")
     private double midtermScore;
-    @Column(name="final_score")
+
+    @Column(name = "final_score")
     private double finalScore;
-    @Column(name="total_score")
+
+    @Column(name = "total_score")
     private double totalScore;
+
     private String grade;
+
     @ManyToOne
-    @JoinColumn(name = "studentId",referencedColumnName = "id")
+    @JoinColumn(name = "studentId", referencedColumnName = "id")
     Students students;
+
     @ManyToOne
-    @JoinColumn(name = "courseId",referencedColumnName = "id")
+    @JoinColumn(name = "courseId", referencedColumnName = "id")
     Courses courses;
+
     String semester;
 }

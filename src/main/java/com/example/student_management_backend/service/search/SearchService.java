@@ -3,7 +3,7 @@ package com.example.student_management_backend.service.search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.student_management_backend.domain.SearchRequest;
+import com.example.student_management_backend.dto.request.SearchRequest;
 import com.example.student_management_backend.dto.response.search.SearchResponse;
 import com.example.student_management_backend.repository.AnnoucementsRepository;
 import com.example.student_management_backend.repository.CourseRepository;

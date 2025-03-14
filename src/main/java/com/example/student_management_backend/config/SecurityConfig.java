@@ -46,11 +46,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/roles/**").authenticated()
+                        .requestMatchers("/api/roles/**").permitAll()
                         .requestMatchers("/api/majors/**").permitAll()
                         .requestMatchers("/api/departments/**").permitAll()
-                        .requestMatchers("/api/students/**").authenticated()
+                        .requestMatchers("/api/students/**").permitAll()
                         .requestMatchers("/api/admin/**").permitAll()
+
                         .requestMatchers("/api/search/**").permitAll()
 
                         .requestMatchers("/api/v1/annoucements/**").permitAll()

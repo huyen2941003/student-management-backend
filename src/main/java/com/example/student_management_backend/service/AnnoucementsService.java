@@ -19,13 +19,13 @@ public class AnnoucementsService {
                 .map(this::mapToResponse)
                 .toList();
     }
+
     private AnnouncementResponse mapToResponse(Announcements announcement) {
         return new AnnouncementResponse(
                 announcement.getId(),
                 announcement.getTitle(),
                 announcement.getContent(),
                 announcement.getCreatedAt(),
-                announcement.getUser().getUsername()
-        );
+                announcement.getUser().getUsername());
     }
 }
