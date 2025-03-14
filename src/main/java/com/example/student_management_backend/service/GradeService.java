@@ -109,21 +109,25 @@ public class GradeService {
                 );
         grades.setMidtermScore(request.getMidtermScore());
         grades.setFinalScore(request.getFinalScore());
-        double totalScore = (request.getMidtermScore() + request.getFinalScore())/2;
+        double totalScore = (request.getMidtermScore()*0.3 + request.getFinalScore()*0.7);
         String grade;
-        if(totalScore>7 && totalScore<8)
+        if(totalScore>=8.5 )
         {
             grade ="A";
-        } else if(totalScore>6 && totalScore<=7)
+        } else if(totalScore>=7.0 && totalScore<8.5)
         {
             grade="B";
         }
-        else if(totalScore>5 && totalScore<=6)
+        else if(totalScore>=5.5 && totalScore<=6.9)
         {
             grade="C";
         }
-        else
+        else if(totalScore>=4.0 && totalScore<=5.4)
+        {
             grade="D";
+        }
+        else
+            grade="E";
         grades.setTotalScore(totalScore);
         grades.setGrade(grade);
         grades.setStudents(students);
