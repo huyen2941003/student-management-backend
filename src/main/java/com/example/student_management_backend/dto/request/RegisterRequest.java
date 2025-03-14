@@ -3,7 +3,6 @@ package com.example.student_management_backend.dto.request;
 import java.time.LocalDate;
 
 import com.example.student_management_backend.domain.Gender;
-import com.example.student_management_backend.util.constant.GenderEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
