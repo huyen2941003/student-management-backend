@@ -46,7 +46,7 @@ public class SearchService {
                 response.setGrades(gradeRepository.findByStudents_IdAndCourses_NameContainingIgnoreCase(
                         request.getStudentId(), request.getKeyword()));
                 break;
-            case "announcement": // Thêm trường hợp tìm kiếm thông báo
+            case "announcement":
                 response.setAnnouncements(
                         annoucementsRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
                                 request.getKeyword(), request.getKeyword()));
