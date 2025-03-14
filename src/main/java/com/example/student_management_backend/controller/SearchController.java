@@ -18,10 +18,4 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping
-    public ResponseEntity<SearchResponse> search(@RequestBody SearchRequest request) {
-        SearchResponse response = searchService.search(request);
-        return ResponseEntity.ok(response);
-    }
 }

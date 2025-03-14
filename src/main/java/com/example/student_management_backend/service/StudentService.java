@@ -37,7 +37,6 @@ public class StudentService {
         return new StudentResponse(student);
     }
 
-    @PreAuthorize("isAuthenticated()")
     public List<StudentResponse> getAllStudent() {
         return studentRepository.findAll().stream()
                 .map(StudentResponse::new)

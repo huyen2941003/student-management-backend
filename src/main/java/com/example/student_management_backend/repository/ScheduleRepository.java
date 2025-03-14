@@ -1,15 +1,17 @@
 package com.example.student_management_backend.repository;
 
+import com.example.student_management_backend.domain.Courses;
 import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
+public interface ScheduleRepository extends JpaRepository<Schedule, Integer>, JpaSpecificationExecutor<Schedule> {
 
         @Query("SELECT new com.example.student_management_backend.dto.response.ScheduleResponse(" +
                         "c.courses.name, s.date, s.startTime, s.endTime, s.room) " +
@@ -22,7 +24,4 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
                         @Param("studentId") int studentId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate);
-
-        // Tìm kiếm lịch học dựa trên tên môn học và ngày
-        List<Schedule> findByCourses_Courses_NameContainingIgnoreCaseAndDate(String keyword, LocalDate date);
 }

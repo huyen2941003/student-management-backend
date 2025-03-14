@@ -43,6 +43,7 @@ public class CourseController {
     public ResponseEntity<List<CourseResponse>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
+
     // @GetMapping("/search")
     // public ResponseEntity<List<CourseResponse>> searchCourses(
     // @RequestParam(required = false) String keyword,
@@ -53,4 +54,14 @@ public class CourseController {
     // semester, minGrade, maxGrade);
     // return ResponseEntity.ok(courses);
     // }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Courses>> searchCourses(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer credit,
+            @RequestParam(required = false) Integer semester) {
+        List<Courses> courses = courseService.searchCourses(name, credit, semester);
+        return ResponseEntity.ok(courses);
+    }
+
 }

@@ -1,15 +1,20 @@
 package com.example.student_management_backend.controller;
 
+import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.request.ScheduleCourseRequest;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import com.example.student_management_backend.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -57,6 +62,16 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while deleting the schedule");
         }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Schedule>> filterSchedules(
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) LocalTime startTime,
+            @RequestParam(required = false) LocalTime endTime,
+            @RequestParam(required = false) String room) {
+        List<Schedule> schedules = scheduleService.filterSchedules(date, startTime, endTime, room);
+        return ResponseEntity.ok(schedules);
     }
 
 }

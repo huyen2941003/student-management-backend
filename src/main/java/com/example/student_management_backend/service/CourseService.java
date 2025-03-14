@@ -7,6 +7,8 @@ import com.example.student_management_backend.dto.response.CourseResponse;
 import com.example.student_management_backend.repository.CourseRepository;
 import com.example.student_management_backend.repository.MajorsRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,4 +68,25 @@ public class CourseService {
         // .map(this::mapToResponse)
         // .toList();
         // }
+
+        public List<Courses> searchCourses(String name, Integer credit, Integer semester) {
+                Specification<Courses> spec = Specification.where(null);
+
+                if (name != null) {
+                        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"),
+                                        "%" + name + "%"));
+                }
+
+                if (credit != null) {
+                        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("credit"),
+                                        credit));
+                }
+
+                if (semester != null) {
+                        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("semester"),
+                                        semester));
+                }
+
+                return courseRepository.findAll(spec);
+        }
 }
