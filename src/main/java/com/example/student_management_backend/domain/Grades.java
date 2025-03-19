@@ -39,6 +39,6 @@ public class Grades {
     @JoinColumn(name = "courseId", referencedColumnName = "id")
     @JsonIgnore
     Courses courses;
-
+    Double score;
     String semester;
 }

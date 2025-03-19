@@ -6,8 +6,10 @@ import com.example.student_management_backend.dto.response.GpaResponse;
 import com.example.student_management_backend.dto.response.GradeResponse;
 import com.example.student_management_backend.service.GradeService;
 
+import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 
+import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,30 +20,33 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/grades")
 @RequiredArgsConstructor
 public class GradeController {
     private final GradeService gradeService;
-
+    private final AuthUtil authUtil;
+    @SneakyThrows
     @PreAuthorize("")
     @GetMapping("/courseId/{courseId}")
     public List<GradeResponse> getGradesByCourseId(@PathVariable int courseId) {
-        int userId = 1;
-        return gradeService.getGradesByCourseId(courseId, userId);
+        Integer studentId = authUtil.loggedInStudentId();
+        return gradeService.getGradesByCourseId(courseId, studentId);
+    }
+
+    @GetMapping("/userId")
+    public List<GradeResponse> getGradesByUserId() throws Exception {
+        Integer studentId = authUtil.loggedInStudentId();
+        return gradeService.getGradesByUserId(studentId);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
-    @GetMapping("/{userId}")
-    public List<GradeResponse> getGradesByUserId(@PathVariable int userId) {
-        return gradeService.getGradesByUserId(userId);
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
-    @GetMapping("/gpa/{userId}")
-    public List<GpaResponse> getGpa(@PathVariable int userId) {
-        return gradeService.calculateGpaBySemester(userId);
+    @GetMapping("/gpa/userId")
+    public List<GpaResponse> getGpa() throws Exception {
+        Integer studentId = authUtil.loggedInStudentId();
+        return gradeService.calculateGpaBySemester(studentId);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
@@ -102,5 +107,16 @@ public class GradeController {
                 pageable);
 
         return ResponseEntity.ok(grades);
+    }
+    @GetMapping("/total")
+    public ResponseEntity<Double> getTotalGPA() throws Exception {
+        Integer studentId = authUtil.loggedInStudentId();
+        return ResponseEntity.ok(gradeService.getTotalGPA(studentId));
+    }
+
+    @GetMapping("/total/by-semester")
+    public ResponseEntity<Map<Integer, Double>> getGPABySemester() throws Exception {
+        Integer studentId = authUtil.loggedInStudentId();
+        return ResponseEntity.ok(gradeService.getGPABySemester(studentId));
     }
 }

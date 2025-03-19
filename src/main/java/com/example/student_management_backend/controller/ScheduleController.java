@@ -4,6 +4,7 @@ import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.request.ScheduleCourseRequest;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import com.example.student_management_backend.service.ScheduleService;
+import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
-
+    private final AuthUtil authUtil;
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{studentId}")
+    @GetMapping("/studentId")
     public ResponseEntity<List<ScheduleResponse>> getSchedule(
-            @PathVariable int studentId,
             @RequestParam String startDate,
-            @RequestParam String endDate) {
+            @RequestParam String endDate) throws Exception {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
-
+        Integer studentId = authUtil.loggedInStudentId();
         return ResponseEntity.ok(scheduleService.getSchedule(studentId, start, end));
     }
 

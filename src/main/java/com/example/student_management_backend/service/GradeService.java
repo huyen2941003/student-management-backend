@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,14 +72,30 @@ public class GradeService {
         String grade;
         if (totalScore >= 8.5) {
             grade = "A";
-        } else if (totalScore >= 7.0 && totalScore < 8.5) {
+            grades.setScore(4.0);
+        } else if (totalScore >= 7.8 && totalScore < 8.5) {
+            grade = "B+";
+            grades.setScore(3.5);
+        } else if (totalScore >= 7.0 && totalScore < 7.8) {
             grade = "B";
-        } else if (totalScore >= 5.5 && totalScore <= 6.9) {
+            grades.setScore(3.0);
+        } else if (totalScore >= 6.5 && totalScore <= 6.9) {
+            grade = "C+";
+            grades.setScore(2.5);
+        } else if (totalScore >= 5.5 && totalScore <= 6.4) {
             grade = "C";
-        } else if (totalScore >= 4.0 && totalScore <= 5.4) {
+            grades.setScore(2.0);
+        } else if (totalScore >= 5.0 && totalScore <= 5.4) {
+            grade = "D+";
+            grades.setScore(1.5);
+        } else if (totalScore >= 4.0 && totalScore <= 4.9) {
             grade = "D";
-        } else
-            grade = "E";
+            grades.setScore(1.0);
+        }else
+        {
+            grades.setScore(0.0);
+            grade = "F";
+        }
         grades.setTotalScore(totalScore);
         grades.setGrade(grade);
         grades.setStudents(students);
@@ -182,5 +200,16 @@ public class GradeService {
         // Thực hiện truy vấn với phân trang và sắp xếp
         return gradeRepository.findAll(spec, pageable);
     }
-
+    public Double getTotalGPA(Integer studentId) {
+        return gradeRepository.calculateTotalGPA(studentId);
+    }
+    //totalbySemester
+    public Map<Integer, Double> getGPABySemester(Integer studentId) {
+        List<Object[]> results = gradeRepository.calculateGPABySemester(studentId);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        row -> (Integer) row[0],  // Semester
+                        row -> (Double) row[1]    // GPA
+                ));
+    }
 }

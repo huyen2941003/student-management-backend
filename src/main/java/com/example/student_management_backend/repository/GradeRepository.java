@@ -25,4 +25,20 @@ public interface GradeRepository extends JpaRepository<Grades, Integer>, JpaSpec
             "ORDER BY c.semester")
     List<Object[]> getRawGpaBySemester(int studentId);
 
+    @Query(value = """
+        SELECT SUM(s.score * c.credit) / SUM(c.credit) AS total_gpa
+        FROM grades s
+        JOIN courses c ON s.courseId = c.id
+        WHERE s.studentId = :studentId;
+        """, nativeQuery = true)
+    Double calculateTotalGPA( Integer studentId);
+
+    @Query(value = """ 
+            SELECT c.semester, SUM(s.score * c.credit) / SUM(c.credit)  
+            FROM grades s 
+            JOIN courses c ON s.courseId = c.id
+            WHERE  s.studentId = :studentId
+            GROUP BY c.semester ORDER BY c.semester;
+            """, nativeQuery = true)
+    List<Object[]> calculateGPABySemester(Integer studentId);
 }

@@ -56,4 +56,9 @@ public class StudentService {
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));
     }
+
+    public Integer getStudentByUserId(Long userId) {
+        return studentRepository.findByUserId(Math.toIntExact(userId)).getId();
+
+    }
 }

@@ -4,6 +4,7 @@ import com.example.student_management_backend.domain.Exams;
 import com.example.student_management_backend.dto.request.ExamRequest;
 import com.example.student_management_backend.dto.response.ExamsScheduleResponse;
 import com.example.student_management_backend.service.IExamService;
+import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,12 +24,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExamController {
     private final IExamService examService;
+    private final AuthUtil authUtil;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}")
-    public List<ExamsScheduleResponse> getExam(@PathVariable int userId) {
-        // Long userID = authUtil.loggedInUserId();
-        return examService.getExams(userId);
+    @GetMapping("/userId")
+    public List<ExamsScheduleResponse> getExam() throws Exception {
+        Integer studentId = authUtil.loggedInStudentId();
+        return examService.getExams(studentId);
     }
 
     // @GetMapping("/{id}")

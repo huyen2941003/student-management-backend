@@ -2,6 +2,7 @@ package com.example.student_management_backend.controller;
 
 import com.example.student_management_backend.dto.response.CourseClassScheduleResponse;
 import com.example.student_management_backend.service.ICourseClassService;
+import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseClassController {
     private final ICourseClassService courseClassService;
-
+    private final AuthUtil authUtil;
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{userId}")
-    private List<CourseClassScheduleResponse> getCourseClass(@PathVariable int userId) {
-        // Long userID = authUtil.loggedInUserId();
-        return courseClassService.getCourseClassSchedule(userId);
+    @GetMapping("")
+    private List<CourseClassScheduleResponse> getCourseClass() throws Exception {
+         Long userID = authUtil.loggedInUserId();
+        return courseClassService.getCourseClassSchedule(Math.toIntExact(userID));
     }
 }

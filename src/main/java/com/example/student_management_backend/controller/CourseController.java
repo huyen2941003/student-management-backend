@@ -4,6 +4,7 @@ import com.example.student_management_backend.domain.Courses;
 import com.example.student_management_backend.dto.request.CourseRequest;
 import com.example.student_management_backend.dto.response.CourseResponse;
 import com.example.student_management_backend.service.CourseService;
+import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+    private final AuthUtil authUtil;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}")
-    public List<CourseResponse> getCourseByUserId(@PathVariable int userId) {
-        return courseService.getCourseByUserId(userId);
+    @GetMapping("/userId")
+    public List<CourseResponse> getCourseByUserId() throws Exception {
+
+        Integer studentId = authUtil.loggedInStudentId();
+        return courseService.getCourseByUserId(Math.toIntExact(studentId));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
