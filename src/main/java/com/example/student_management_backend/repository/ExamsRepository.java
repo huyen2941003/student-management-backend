@@ -3,12 +3,13 @@ package com.example.student_management_backend.repository;
 import com.example.student_management_backend.domain.Exams;
 import com.example.student_management_backend.dto.response.ExamsScheduleResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ExamsRepository extends JpaRepository<Exams, Integer> {
+public interface ExamsRepository extends JpaRepository<Exams, Integer>, JpaSpecificationExecutor<Exams> {
     @Query("SELECT new com.example.student_management_backend.dto.response.ExamsScheduleResponse(e.examDate, e.startTime, e.endTime, c.name, e.room) "
             +
             "FROM Exams e " +

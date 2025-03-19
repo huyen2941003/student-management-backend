@@ -9,7 +9,12 @@ import com.example.student_management_backend.dto.response.GradeResponse;
 import com.example.student_management_backend.repository.CourseRepository;
 import com.example.student_management_backend.repository.GradeRepository;
 import com.example.student_management_backend.repository.StudentRepository;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -119,4 +124,64 @@ public class GradeService {
         grades.setCourses(courses);
         return gradeRepository.save(grades);
     }
+
+    public Page<Grades> searchGrades(
+            Double midtermScore, Double midtermScoreMin, Double midtermScoreMax,
+            Double finalScore, Double finalScoreMin, Double finalScoreMax,
+            Double totalScore, Double totalScoreMin, Double totalScoreMax,
+            String semester, Integer studentId, Integer courseId,
+            Pageable pageable) {
+
+        // Tạo một Specification ban đầu
+        Specification<Grades> spec = Specification.where(null);
+
+        // Tìm kiếm theo khoảng giá trị của midtermScore
+        if (midtermScore != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("midtermScore"), midtermScore));
+        } else if (midtermScoreMin != null && midtermScoreMax != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("midtermScore"),
+                    midtermScoreMin, midtermScoreMax));
+        }
+
+        // Tìm kiếm theo khoảng giá trị của finalScore
+        if (finalScore != null) {
+            spec = spec
+                    .and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("finalScore"), finalScore));
+        } else if (finalScoreMin != null && finalScoreMax != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("finalScore"),
+                    finalScoreMin, finalScoreMax));
+        }
+
+        // Tìm kiếm theo khoảng giá trị của totalScore
+        if (totalScore != null) {
+            spec = spec
+                    .and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("totalScore"), totalScore));
+        } else if (totalScoreMin != null && totalScoreMax != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("totalScore"),
+                    totalScoreMin, totalScoreMax));
+        }
+
+        // Tìm kiếm theo semester
+        if (semester != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("semester"), "%" + semester + "%"));
+        }
+
+        // Tìm kiếm theo studentId
+        if (studentId != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("students").get("id"), studentId));
+        }
+
+        // Tìm kiếm theo courseId
+        if (courseId != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("courses").get("id"), courseId));
+        }
+
+        // Thực hiện truy vấn với phân trang và sắp xếp
+        return gradeRepository.findAll(spec, pageable);
+    }
+
 }

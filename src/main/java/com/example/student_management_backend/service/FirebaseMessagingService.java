@@ -12,7 +12,7 @@ public class FirebaseMessagingService {
                 .build();
 
         Message message = Message.builder()
-                .setToken(token)  // Token của thiết bị nhận thông báo
+                .setToken(token) // Token của thiết bị nhận thông báo
                 .setNotification(notification)
                 .build();
 

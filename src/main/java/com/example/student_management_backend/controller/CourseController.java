@@ -55,6 +55,7 @@ public class CourseController {
     // return ResponseEntity.ok(courses);
     // }
 
+    // Nhập tên, số tín chỉ, học kì để tìm kiếm được môn học.
     @GetMapping("/search")
     public ResponseEntity<List<Courses>> searchCourses(
             @RequestParam(required = false) String name,

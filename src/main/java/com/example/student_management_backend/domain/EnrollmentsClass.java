@@ -1,5 +1,7 @@
 package com.example.student_management_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class EnrollmentsClass {
 
     @ManyToOne
     @JoinColumn(name = "majorId", nullable = false)
+    @JsonIgnore
     private Majors major;
 
     @Column(name = "name", nullable = false)

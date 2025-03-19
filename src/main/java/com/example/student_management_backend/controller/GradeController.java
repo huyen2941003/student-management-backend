@@ -5,7 +5,13 @@ import com.example.student_management_backend.dto.request.GradeRequest;
 import com.example.student_management_backend.dto.response.GpaResponse;
 import com.example.student_management_backend.dto.response.GradeResponse;
 import com.example.student_management_backend.service.GradeService;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,5 +71,38 @@ public class GradeController {
         Grades grade = gradeService.updateGradeById(request);
         return new ResponseEntity<>(grade, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Grades>> searchGrades(
+            @RequestParam(required = false) Double midtermScore,
+            @RequestParam(required = false) Double midtermScoreMin,
+            @RequestParam(required = false) Double midtermScoreMax,
+            @RequestParam(required = false) Double finalScore,
+            @RequestParam(required = false) Double finalScoreMin,
+            @RequestParam(required = false) Double finalScoreMax,
+            @RequestParam(required = false) Double totalScore,
+            @RequestParam(required = false) Double totalScoreMin,
+            @RequestParam(required = false) Double totalScoreMax,
+            @RequestParam(required = false) String semester,
+            @RequestParam(required = false) Integer studentId,
+            @RequestParam(required = false) Integer courseId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+
+        // Tạo đối tượng Pageable để phân trang và sắp xếp
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1]))));
+
+        // Gọi service để thực hiện tìm kiếm
+        Page<Grades> grades = gradeService.searchGrades(
+                midtermScore, midtermScoreMin, midtermScoreMax,
+                finalScore, finalScoreMin, finalScoreMax,
+                totalScore, totalScoreMin, totalScoreMax,
+                semester, studentId, courseId,
+                pageable);
+
+        return ResponseEntity.ok(grades);
     }
 }

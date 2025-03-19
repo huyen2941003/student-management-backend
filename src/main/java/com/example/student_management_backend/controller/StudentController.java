@@ -6,15 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.example.student_management_backend.dto.request.StudentRequest;
-import com.example.student_management_backend.dto.response.role.RoleResponse;
+import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.service.StudentService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class StudentController {
 
     @Autowired
@@ -38,23 +37,17 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/admin/students/{id}")
-    public ResponseEntity<StudentResponse> updateStudentForAdmin(
-            @PathVariable Integer id,
-            @ModelAttribute StudentRequest studentRequest,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
-        StudentResponse updatedStudent = studentService.updateStudentForAdmin(id, studentRequest, avatarFile);
-        return ResponseEntity.ok(updatedStudent);
+    @PutMapping("/students/{id}")
+    public ResponseEntity<Students> updateStudent(@PathVariable Integer id, @RequestBody Students updatedStudent) {
+        Students student = studentService.updateStudent(id, updatedStudent);
+        return ResponseEntity.ok(student);
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
-    @PutMapping("/students/{id}")
-    public ResponseEntity<StudentResponse> updateStudentForStudent(
-            @PathVariable Integer id,
-            @ModelAttribute StudentRequest studentRequest,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
-        StudentResponse updatedStudent = studentService.updateStudentForStudent(id, studentRequest, avatarFile);
-        return ResponseEntity.ok(updatedStudent);
+    @PutMapping("/admin/students/{id}")
+    public ResponseEntity<Students> updateStudentByAdmin(@PathVariable Integer id,
+            @RequestBody Students updateStudentByAdmin) {
+        Students student = studentService.updateStudentByAdmin(id, updateStudentByAdmin);
+        return ResponseEntity.ok(student);
     }
+
 }

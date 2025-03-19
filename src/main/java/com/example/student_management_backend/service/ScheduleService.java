@@ -9,6 +9,8 @@ import com.example.student_management_backend.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -72,5 +74,63 @@ public class ScheduleService {
         }
 
         return scheduleRepository.findAll(spec);
+    }
+
+    public Page<Schedule> searchSchedules(
+            LocalDate date,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            LocalTime startTime,
+            LocalTime endTime,
+            String room,
+            String courseName,
+            Integer classId,
+            Pageable pageable) {
+
+        Specification<Schedule> spec = Specification.where(null);
+
+        // Tìm kiếm theo ngày cụ thể
+        if (date != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("date"), date));
+        }
+
+        // Tìm kiếm theo khoảng ngày
+        if (dateFrom != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateFrom));
+        }
+        if (dateTo != null) {
+            spec = spec
+                    .and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateTo));
+        }
+
+        // Tìm kiếm theo thời gian bắt đầu
+        if (startTime != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
+        }
+
+        // Tìm kiếm theo thời gian kết thúc
+        if (endTime != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime));
+        }
+
+        // Tìm kiếm theo phòng học
+        if (room != null && !room.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("room"), "%" + room + "%"));
+        }
+
+        // Tìm kiếm theo tên môn học
+        if (courseName != null && !courseName.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder
+                    .like(root.get("courses").get("courses").get("name"), "%" + courseName + "%"));
+        }
+
+        // Tìm kiếm theo ID lớp học
+        if (classId != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("courses").get("id"), classId));
+        }
+
+        return scheduleRepository.findAll(spec, pageable);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.student_management_backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Departments;
@@ -48,25 +49,35 @@ public class DepartmentsService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Department"));
 
         if (!department.getDepartmentName().equals(request.getDepartmentName())) {
-            // Kiểm tra xem departmentName mới đã tồn tại chưa
             if (departmentsRepository.existsByDepartmentName(request.getDepartmentName())) {
                 throw new RuntimeException("Departmentname đã tồn tại!");
             }
-            // Cập nhật departmentName nếu nó thay đổi
             department.setDepartmentName(request.getDepartmentName());
         }
 
-        // Cập nhật description
         department.setDescription(request.getDescription());
 
-        // Lưu department vào cơ sở dữ liệu
         department = departmentsRepository.save(department);
 
-        // Trả về response
         return new DepartmentsResponse(department.getId(), department.getDepartmentName(), department.getDescription());
     }
 
     public void deleteDepartment(Integer id) {
         departmentsRepository.deleteById(id);
+    }
+
+    public List<Departments> searchDepartments(String departmentName, String description) {
+        Specification<Departments> spec = Specification.where(null);
+
+        if (departmentName != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("departmentName"),
+                    "%" + departmentName + "%"));
+        }
+        if (description != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("description"),
+                    "%" + description + "%"));
+        }
+
+        return departmentsRepository.findAll(spec);
     }
 }

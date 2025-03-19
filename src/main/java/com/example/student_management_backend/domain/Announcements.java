@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -19,6 +21,7 @@ public class Announcements {
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
+    @JsonIgnore
     User user;
 
     String title;

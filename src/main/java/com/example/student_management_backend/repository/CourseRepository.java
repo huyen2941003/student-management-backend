@@ -35,4 +35,5 @@ public interface CourseRepository extends JpaRepository<Courses, Integer>, JpaSp
         // @Param("semester") String semester,
         // @Param("minGrade") Double minGrade,
         // @Param("maxGrade") Double maxGrade);
+
 }

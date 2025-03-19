@@ -2,11 +2,12 @@ package com.example.student_management_backend.repository;
 
 import com.example.student_management_backend.domain.Grades;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface GradeRepository extends JpaRepository<Grades, Integer> {
+public interface GradeRepository extends JpaRepository<Grades, Integer>, JpaSpecificationExecutor<Grades> {
 
     List<Grades> findByCourses_Id(int courseId);
 
@@ -23,7 +24,5 @@ public interface GradeRepository extends JpaRepository<Grades, Integer> {
             "GROUP BY c.semester " +
             "ORDER BY c.semester")
     List<Object[]> getRawGpaBySemester(int studentId);
-
-    List<Grades> findByStudents_IdAndCourses_NameContainingIgnoreCase(Integer studentId, String keyword);
 
 }

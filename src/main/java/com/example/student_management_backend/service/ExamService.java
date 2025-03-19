@@ -7,8 +7,13 @@ import com.example.student_management_backend.dto.response.ExamsScheduleResponse
 import com.example.student_management_backend.repository.CourseClassRepository;
 import com.example.student_management_backend.repository.ExamsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -60,5 +65,63 @@ public class ExamService implements IExamService {
             // Xử lý ngoại lệ (ví dụ: ghi log hoặc ném một ngoại lệ tùy chỉnh)
             throw new RuntimeException("Failed to create exam: " + e.getMessage(), e);
         }
+    }
+
+    public Page<Exams> searchExams(
+            LocalDate examDate,
+            LocalDate examDateFrom,
+            LocalDate examDateTo,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            String room,
+            String courseName,
+            Integer classId,
+            Pageable pageable) {
+
+        Specification<Exams> spec = Specification.where(null);
+
+        // Tìm kiếm theo ngày thi cụ thể
+        if (examDate != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("examDate"), examDate));
+        }
+
+        // Tìm kiếm theo khoảng ngày thi
+        if (examDateFrom != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("examDate"),
+                    examDateFrom));
+        }
+        if (examDateTo != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("examDate"),
+                    examDateTo));
+        }
+
+        // Tìm kiếm theo thời gian bắt đầu
+        if (startTime != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
+        }
+
+        // Tìm kiếm theo thời gian kết thúc
+        if (endTime != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime));
+        }
+
+        // Tìm kiếm theo phòng thi
+        if (room != null && !room.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("room"), "%" + room + "%"));
+        }
+
+        // Tìm kiếm theo tên môn học
+        if (courseName != null && !courseName.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder
+                    .like(root.get("classes").get("courses").get("name"), "%" + courseName + "%"));
+        }
+
+        // Tìm kiếm theo ID lớp học
+        if (classId != null) {
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("classes").get("id"), classId));
+        }
+
+        return examsRepository.findAll(spec, pageable);
     }
 }

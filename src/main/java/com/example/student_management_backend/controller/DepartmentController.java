@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.student_management_backend.domain.Departments;
 import com.example.student_management_backend.dto.request.DepartmentsRequest;
 import com.example.student_management_backend.dto.response.department.DepartmentsResponse;
 import com.example.student_management_backend.service.DepartmentsService;
@@ -53,4 +54,14 @@ public class DepartmentController {
         departmentsService.deleteDepartment(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Nhập tên khoa hoặc mô tả để tìm kiếm khoa
+    @GetMapping("/search")
+    public ResponseEntity<List<Departments>> searchDepartments(
+            @RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) String description) {
+        List<Departments> departments = departmentsService.searchDepartments(departmentName, description);
+        return ResponseEntity.ok(departments);
+    }
+
 }

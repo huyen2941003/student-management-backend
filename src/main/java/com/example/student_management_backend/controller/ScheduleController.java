@@ -7,6 +7,10 @@ import com.example.student_management_backend.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Schedules;
@@ -64,14 +68,31 @@ public class ScheduleController {
         }
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<List<Schedule>> filterSchedules(
+    @GetMapping("/search")
+    public ResponseEntity<Page<Schedule>> searchSchedules(
             @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) LocalDate dateFrom,
+            @RequestParam(required = false) LocalDate dateTo,
             @RequestParam(required = false) LocalTime startTime,
             @RequestParam(required = false) LocalTime endTime,
-            @RequestParam(required = false) String room) {
-        List<Schedule> schedules = scheduleService.filterSchedules(date, startTime, endTime, room);
+            @RequestParam(required = false) String room,
+            @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) Integer classId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date,asc") String[] sort) {
+
+        // Tạo đối tượng Pageable để phân trang và sắp xếp
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1]))));
+
+        // Gọi service để thực hiện tìm kiếm
+        Page<Schedule> schedules = scheduleService.searchSchedules(
+                date, dateFrom, dateTo,
+                startTime, endTime,
+                room, courseName, classId,
+                pageable);
+
         return ResponseEntity.ok(schedules);
     }
-
 }

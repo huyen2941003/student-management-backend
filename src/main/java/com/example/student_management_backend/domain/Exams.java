@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 
 @Getter
@@ -31,6 +33,7 @@ public class Exams {
 
     @ManyToOne
     @JoinColumn(name = "classId", referencedColumnName = "id")
+    @JsonIgnore
     CourseClass classes;
 
     String room;

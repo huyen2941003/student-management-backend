@@ -2,6 +2,9 @@ package com.example.student_management_backend.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +12,8 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Majors {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +24,10 @@ public class Majors {
 
     @ManyToOne
     @JoinColumn(name = "departmentId", referencedColumnName = "id")
+    @JsonIgnore
     Departments departments;
 
-//    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<EnrollmentsClass> enrollmentsClasses;
+    // @OneToMany(mappedBy = "major", cascade = CascadeType.ALL, fetch =
+    // FetchType.LAZY)
+    // private List<EnrollmentsClass> enrollmentsClasses;
 }

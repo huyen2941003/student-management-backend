@@ -1,5 +1,7 @@
 package com.example.student_management_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +32,12 @@ public class Grades {
 
     @ManyToOne
     @JoinColumn(name = "studentId", referencedColumnName = "id")
+    @JsonIgnore
     Students students;
 
     @ManyToOne
     @JoinColumn(name = "courseId", referencedColumnName = "id")
+    @JsonIgnore
     Courses courses;
 
     String semester;

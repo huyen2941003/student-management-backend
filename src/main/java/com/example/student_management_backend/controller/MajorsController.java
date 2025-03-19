@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.student_management_backend.domain.Majors;
 import com.example.student_management_backend.dto.request.MajorsRequest;
 import com.example.student_management_backend.dto.response.major.MajorsResponse;
 import com.example.student_management_backend.service.MajorsService;
@@ -51,5 +52,14 @@ public class MajorsController {
     public ResponseEntity<Void> deleteMajor(@PathVariable Integer id) {
         majorsService.deleteMajor(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Nhập tên chuyên ngành hoặc tên khoa để tìm kiếm chuyên ngành
+    @GetMapping("/search")
+    public ResponseEntity<List<Majors>> searchMajors(
+            @RequestParam(required = false) String majorName,
+            @RequestParam(required = false) String departmentName) {
+        List<Majors> majors = majorsService.searchMajors(majorName, departmentName);
+        return ResponseEntity.ok(majors);
     }
 }

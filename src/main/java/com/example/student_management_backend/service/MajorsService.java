@@ -1,6 +1,7 @@
 package com.example.student_management_backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.student_management_backend.domain.Departments;
@@ -57,5 +58,21 @@ public class MajorsService {
 
     public void deleteMajor(Integer id) {
         majorsRepository.deleteById(id);
+    }
+
+    public List<Majors> searchMajors(String majorName, String departmentName) {
+        Specification<Majors> spec = Specification.where(null);
+
+        if (majorName != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("majorName"),
+                    "%" + majorName + "%"));
+        }
+
+        if (departmentName != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder
+                    .like(root.get("departments").get("departmentName"), "%" + departmentName + "%"));
+        }
+
+        return majorsRepository.findAll(spec);
     }
 }

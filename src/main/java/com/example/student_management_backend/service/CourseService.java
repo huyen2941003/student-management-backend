@@ -76,12 +76,10 @@ public class CourseService {
                         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"),
                                         "%" + name + "%"));
                 }
-
                 if (credit != null) {
                         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("credit"),
                                         credit));
                 }
-
                 if (semester != null) {
                         spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("semester"),
                                         semester));
@@ -89,4 +87,5 @@ public class CourseService {
 
                 return courseRepository.findAll(spec);
         }
+
 }

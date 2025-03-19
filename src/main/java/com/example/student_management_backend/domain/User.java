@@ -2,6 +2,8 @@ package com.example.student_management_backend.domain;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +26,12 @@ public class User extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "roleId", referencedColumnName = "id")
+    @JsonIgnore
     private Role role;
 
     private String fcmToken;
 
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
-
 
 }

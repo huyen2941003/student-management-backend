@@ -30,17 +30,27 @@ public class StudentResponse {
     private String avatar;
 
     public StudentResponse(Students student) {
-        this.id = student.getId();
-        this.fullName = student.getFullName();
-        this.dob = student.getDob();
-        this.gender = student.getGender();
-        this.email = student.getEmail();
-        this.phone = student.getPhone();
-        this.address = student.getAddress();
-        this.status = student.getStatus();
-        this.avatar = student.getAvatar();
-        this.majorName = student.getMajors() != null ? student.getMajors().getMajorName() : null;
-        this.departmentName = student.getDepartments() != null ? student.getDepartments().getDepartmentName() : null;
-        this.username = student.getUser() != null ? student.getUser().getUsername() : null;
+        if (student != null) {
+            this.id = student.getId();
+            this.fullName = student.getFullName();
+            this.dob = student.getDob();
+            this.gender = student.getGender();
+            this.email = student.getEmail();
+            this.phone = student.getPhone();
+            this.address = student.getAddress();
+            this.status = student.getStatus();
+
+            if (student.getMajors() != null) {
+                this.majorName = student.getMajors().getMajorName();
+            }
+
+            if (student.getDepartments() != null) {
+                this.departmentName = student.getDepartments().getDepartmentName();
+            }
+
+            if (student.getUser() != null) {
+                this.username = student.getUser().getUsername();
+            }
+        }
     }
 }

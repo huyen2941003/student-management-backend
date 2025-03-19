@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -16,14 +18,18 @@ public class CourseClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+
     @Column(name = "created_date", nullable = false)
     LocalDateTime createdDate;
 
     @Column(name = "max_student", nullable = false)
     int maxStudent;
+
     @ManyToOne
     @JoinColumn(name = "courseId", referencedColumnName = "id")
+    @JsonIgnore
     Courses courses;
+
     int semester;
 
 }

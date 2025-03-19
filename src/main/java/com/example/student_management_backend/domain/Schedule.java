@@ -9,6 +9,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "schedule")
 @Getter
@@ -22,6 +24,7 @@ public class Schedule {
 
     @ManyToOne
     @JoinColumn(name = "classId", nullable = false)
+    @JsonIgnore
     private CourseClass courses; // Lớp học phần
 
     @Column(name = "date", nullable = false)
