@@ -47,11 +47,11 @@ public class StudentService {
                 .map(student -> {
                     student.setFullName(updateStudentByAdmin.getFullName());
                     student.setDob(updateStudentByAdmin.getDob());
-                    student.setGender(updateStudentByAdmin.getGender()); // Kiểm tra giá trị
+                    student.setGender(updateStudentByAdmin.getGender());
                     student.setEmail(updateStudentByAdmin.getEmail());
                     student.setPhone(updateStudentByAdmin.getPhone());
                     student.setAddress(updateStudentByAdmin.getAddress());
-                    student.setStatus(updateStudentByAdmin.getStatus()); // Kiểm tra giá trị
+                    student.setStatus(updateStudentByAdmin.getStatus());
                     return studentRepository.save(student);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));

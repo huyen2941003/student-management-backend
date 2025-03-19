@@ -55,11 +55,9 @@ public class AnnoucementsController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt,desc") String[] sort) {
 
-        // Tạo đối tượng Pageable để phân trang và sắp xếp
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1]))));
 
-        // Gọi service để thực hiện tìm kiếm
         Page<Announcements> announcements = annoucementsService.searchAnnouncements(
                 title, content, username,
                 createdAtFrom, createdAtTo,

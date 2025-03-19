@@ -58,11 +58,10 @@ public class ExamService implements IExamService {
             Exams exams = new Exams();
             exams.setExamDate(request.getExamDate());
             exams.setStartTime(request.getStartDate());
-            exams.setClasses(classes); // Thiết lập lớp học phần cho kỳ thi
+            exams.setClasses(classes);
 
-            return examsRepository.save(exams); // Lưu kỳ thi vào database và trả về
+            return examsRepository.save(exams);
         } catch (Exception e) {
-            // Xử lý ngoại lệ (ví dụ: ghi log hoặc ném một ngoại lệ tùy chỉnh)
             throw new RuntimeException("Failed to create exam: " + e.getMessage(), e);
         }
     }

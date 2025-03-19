@@ -132,7 +132,6 @@ public class GradeService {
             String semester, Integer studentId, Integer courseId,
             Pageable pageable) {
 
-        // Tạo một Specification ban đầu
         Specification<Grades> spec = Specification.where(null);
 
         // Tìm kiếm theo khoảng giá trị của midtermScore

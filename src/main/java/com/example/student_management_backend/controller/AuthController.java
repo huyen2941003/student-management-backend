@@ -120,10 +120,8 @@ public class AuthController {
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Token không hợp lệ"));
 
-        // Cập nhật mật khẩu mới
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        // Mã hóa mật khẩu
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
         user.setResetToken(null);

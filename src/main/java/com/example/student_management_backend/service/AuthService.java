@@ -44,28 +44,22 @@ public class AuthService {
         private final Random random = new Random();
 
         public RegisterResponse register(RegisterRequest registerRequest) {
-                // Kiểm tra nếu username được truyền vào và roleName = "ROLE_ADMIN"
                 if (registerRequest.getUsername() != null && "ROLE_ADMIN".equals(registerRequest.getRoleName())) {
-                        // Chỉ đăng ký User
                         return registerUserOnly(registerRequest);
                 } else {
-                        // Nếu không có username, tạo username ngẫu nhiên và đăng ký cả User và Student
                         return registerUserAndStudent(registerRequest);
                 }
         }
 
         private RegisterResponse registerUserOnly(RegisterRequest registerRequest) {
-                // Kiểm tra username đã tồn tại chưa
                 if (userRepository.existsByUsername(registerRequest.getUsername())) {
                         throw new RuntimeException("Username đã tồn tại!");
                 }
 
-                // Lấy role từ database dựa trên roleName
                 Role role = roleRepository.findByRole(registerRequest.getRoleName())
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Role not found with name: " + registerRequest.getRoleName()));
 
-                // Tạo và lưu User
                 User user = new User();
                 user.setUsername(registerRequest.getUsername());
                 user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -77,21 +71,17 @@ public class AuthService {
         }
 
         private RegisterResponse registerUserAndStudent(RegisterRequest registerRequest) {
-                // Tạo username ngẫu nhiên
                 LocalDateTime createdAt = LocalDateTime.now();
                 String username = generateStudentId(createdAt);
 
-                // Kiểm tra username đã tồn tại chưa
                 if (userRepository.existsByUsername(username)) {
                         throw new RuntimeException("Username đã tồn tại!");
                 }
 
-                // Lấy role từ database dựa trên roleName
                 Role role = roleRepository.findByRole(registerRequest.getRoleName())
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Role not found with name: " + registerRequest.getRoleName()));
 
-                // Tạo và lưu User
                 User user = new User();
                 user.setUsername(username);
                 user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -99,7 +89,6 @@ public class AuthService {
 
                 User savedUser = userRepository.save(user);
 
-                // Lấy major và department từ database
                 Majors major = majorsRepository.findById(registerRequest.getMajorId())
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Major not found with id: " + registerRequest.getMajorId()));
@@ -108,7 +97,6 @@ public class AuthService {
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Department not found with id: " + registerRequest.getDepartmentId()));
 
-                // Tạo và lưu Student
                 Students student = Students.builder()
                                 .fullName(registerRequest.getFullName())
                                 .dob(registerRequest.getDob())
