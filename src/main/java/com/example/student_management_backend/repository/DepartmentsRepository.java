@@ -14,4 +14,5 @@ public interface DepartmentsRepository
 
     boolean existsByDepartmentName(String departmentName);
 
+    Optional<Departments> findByDepartmentName(String departmentName); // Tìm Departments theo departmentName
 }

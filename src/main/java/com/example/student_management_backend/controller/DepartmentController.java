@@ -13,7 +13,7 @@ import com.example.student_management_backend.service.DepartmentsService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/departments")
+@RequestMapping("/api/departments")
 public class DepartmentController {
 
     @Autowired
@@ -55,7 +55,7 @@ public class DepartmentController {
         return ResponseEntity.noContent().build();
     }
 
-    // Nhập tên khoa hoặc mô tả để tìm kiếm khoa
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<List<Departments>> searchDepartments(
             @RequestParam(required = false) String departmentName,

@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentRequest {
+public class LectureRequest {
     @NotBlank(message = "Full name is required")
     @Size(max = 100, message = "Full name must be less than 100 characters")
     private String fullName;

@@ -13,7 +13,7 @@ import com.example.student_management_backend.service.MajorsService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/majors")
+@RequestMapping("/api/majors")
 public class MajorsController {
 
     @Autowired

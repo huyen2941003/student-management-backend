@@ -10,11 +10,16 @@ import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.repository.StudentRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     // Lấy thông tin sinh viên theo ID
     public StudentResponse getStudentById(Integer id) {
@@ -29,29 +34,50 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Students updateStudent(Integer id, Students updatedStudent) {
         return studentRepository.findById(id)
                 .map(student -> {
+                    // Cập nhật thông tin cơ bản
                     student.setFullName(updatedStudent.getFullName());
                     student.setDob(updatedStudent.getDob());
                     student.setEmail(updatedStudent.getEmail());
                     student.setPhone(updatedStudent.getPhone());
                     student.setAddress(updatedStudent.getAddress());
+
+                    student.setGender(student.getGender());
+                    student.setStatus(student.getStatus());
+                    // Cập nhật avatar nếu có
+                    if (updatedStudent.getAvatar() != null) {
+                        student.setAvatar(updatedStudent.getAvatar());
+                    }
+
                     return studentRepository.save(student);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));
     }
 
+    @Transactional
     public Students updateStudentByAdmin(Integer id, Students updateStudentByAdmin) {
         return studentRepository.findById(id)
                 .map(student -> {
+                    // Cập nhật thông tin cơ bản
                     student.setFullName(updateStudentByAdmin.getFullName());
                     student.setDob(updateStudentByAdmin.getDob());
-                    student.setGender(updateStudentByAdmin.getGender());
                     student.setEmail(updateStudentByAdmin.getEmail());
                     student.setPhone(updateStudentByAdmin.getPhone());
                     student.setAddress(updateStudentByAdmin.getAddress());
+
+                    student.setGender(updateStudentByAdmin.getGender());
                     student.setStatus(updateStudentByAdmin.getStatus());
+                    student.setMajors(updateStudentByAdmin.getMajors());
+                    student.setDepartments(updateStudentByAdmin.getDepartments());
+
+                    // Cập nhật avatar nếu có
+                    if (updateStudentByAdmin.getAvatar() != null) {
+                        student.setAvatar(updateStudentByAdmin.getAvatar());
+                    }
+
                     return studentRepository.save(student);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));

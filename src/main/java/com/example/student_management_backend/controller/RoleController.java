@@ -19,7 +19,7 @@ import com.example.student_management_backend.dto.response.role.RoleResponse;
 import com.example.student_management_backend.service.RoleService;
 
 @RestController
-@RequestMapping("/api/admin/roles")
+@RequestMapping("/api/roles")
 public class RoleController {
 
     @Autowired

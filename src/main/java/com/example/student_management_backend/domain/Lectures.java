@@ -19,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "student")
+@Table(name = "lecture")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Students extends BaseEntity {
+public class Lectures extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -61,11 +61,6 @@ public class Students extends BaseEntity {
     private String avatar;
 
     @ManyToOne
-    @JoinColumn(name = "majorId", referencedColumnName = "id")
-    @JsonIgnore
-    Majors majors;
-
-    @ManyToOne
     @JoinColumn(name = "departmentId", referencedColumnName = "id")
     @JsonIgnore
     Departments departments;
@@ -74,15 +69,6 @@ public class Students extends BaseEntity {
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false, unique = true)
     @JsonIgnore
     private User user;
-
-    // Getter và Setter
-    public Majors getMajors() {
-        return majors;
-    }
-
-    public void setMajors(Majors majors) {
-        this.majors = majors;
-    }
 
     public Departments getDepartments() {
         return departments;

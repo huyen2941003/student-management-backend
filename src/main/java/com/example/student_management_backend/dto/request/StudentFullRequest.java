@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 import com.example.student_management_backend.domain.Gender;
 import com.example.student_management_backend.domain.Status;
-import com.example.student_management_backend.domain.Students;
-
 import jakarta.validation.constraints.NotNull;
 
 import jakarta.validation.constraints.Email;
@@ -22,13 +20,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentRequest {
+public class StudentFullRequest {
     @NotBlank(message = "Full name is required")
     @Size(max = 100, message = "Full name must be less than 100 characters")
     private String fullName;
 
     @Past(message = "Date of birth must be in the past")
-    private LocalDate dob;;
+    private LocalDate dob;
+
+    @NotNull(message = "Gender is required")
+    private Gender gender;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
@@ -40,4 +41,11 @@ public class StudentRequest {
 
     @NotBlank(message = "Address is required")
     private String address;
+
+    @NotNull(message = "Status is required")
+    private Status status;
+
+    private String major;
+
+    private String department;
 }
