@@ -7,7 +7,6 @@ import com.example.student_management_backend.service.ScheduleService;
 import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +26,7 @@ import java.util.List;
 public class ScheduleController {
     private final ScheduleService scheduleService;
     private final AuthUtil authUtil;
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/studentId")
     public ResponseEntity<List<ScheduleResponse>> getSchedule(
@@ -67,6 +67,7 @@ public class ScheduleController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
     public ResponseEntity<Page<Schedule>> searchSchedules(
             @RequestParam(required = false) LocalDate date,

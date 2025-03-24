@@ -19,4 +19,7 @@ public interface StudentRepository extends JpaRepository<Students, Integer> {
 
     List<Students> findAll();
 
+    boolean existsByEmail(String email);
+
+    boolean existsByPhone(String phoneNumber);
 }

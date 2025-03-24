@@ -19,4 +19,8 @@ public interface LectureRepository extends JpaRepository<Lectures, Integer> {
 
     List<Lectures> findAll();
 
+    boolean existsByEmail(String email);
+
+    boolean existsByPhone(String phoneNumber);
+
 }

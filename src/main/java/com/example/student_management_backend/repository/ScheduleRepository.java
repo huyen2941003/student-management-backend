@@ -1,6 +1,5 @@
 package com.example.student_management_backend.repository;
 
-import com.example.student_management_backend.domain.Courses;
 import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import org.springframework.data.jpa.repository.JpaRepository;

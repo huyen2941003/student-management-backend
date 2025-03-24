@@ -55,7 +55,7 @@ public class LectureController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('LECTURER')")
     @PutMapping(value = "/lectures/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateLectureForLecture(
             @PathVariable Integer id,

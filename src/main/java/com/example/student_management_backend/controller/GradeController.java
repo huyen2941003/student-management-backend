@@ -28,21 +28,23 @@ import java.util.Map;
 public class GradeController {
     private final GradeService gradeService;
     private final AuthUtil authUtil;
+
     @SneakyThrows
-    @PreAuthorize("")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/courseId/{courseId}")
     public List<GradeResponse> getGradesByCourseId(@PathVariable int courseId) {
         Integer studentId = authUtil.loggedInStudentId();
         return gradeService.getGradesByCourseId(courseId, studentId);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/userId")
     public List<GradeResponse> getGradesByUserId() throws Exception {
         Integer studentId = authUtil.loggedInStudentId();
         return gradeService.getGradesByUserId(studentId);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/gpa/userId")
     public List<GpaResponse> getGpa() throws Exception {
         Integer studentId = authUtil.loggedInStudentId();
@@ -56,7 +58,7 @@ public class GradeController {
         return new ResponseEntity<>(grade, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<Grades>> getAllGrades() {
         return ResponseEntity.ok(gradeService.getAllGrades());
@@ -78,6 +80,7 @@ public class GradeController {
 
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
     public ResponseEntity<Page<Grades>> searchGrades(
             @RequestParam(required = false) Double midtermScore,
@@ -108,6 +111,7 @@ public class GradeController {
 
         return ResponseEntity.ok(grades);
     }
+
     @GetMapping("/total")
     public ResponseEntity<Double> getTotalGPA() throws Exception {
         Integer studentId = authUtil.loggedInStudentId();

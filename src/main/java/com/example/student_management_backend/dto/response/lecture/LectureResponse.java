@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.example.student_management_backend.domain.Gender;
 import com.example.student_management_backend.domain.Lectures;
 import com.example.student_management_backend.domain.Status;
-import com.example.student_management_backend.domain.Students;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +38,7 @@ public class LectureResponse {
             this.phone = lectures.getPhone();
             this.address = lectures.getAddress();
             this.status = lectures.getStatus();
+            this.avatar = lectures.getAvatar();
 
             if (lectures.getDepartments() != null) {
                 this.departmentName = lectures.getDepartments().getDepartmentName();

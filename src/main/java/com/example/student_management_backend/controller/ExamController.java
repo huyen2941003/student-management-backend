@@ -26,6 +26,7 @@ public class ExamController {
     private final IExamService examService;
     private final AuthUtil authUtil;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/userId")
     public List<ExamsScheduleResponse> getExam() throws Exception {
         Integer studentId = authUtil.loggedInStudentId();

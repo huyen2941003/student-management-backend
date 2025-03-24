@@ -20,6 +20,7 @@ public class CourseController {
     private final CourseService courseService;
     private final AuthUtil authUtil;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/userId")
     public List<CourseResponse> getCourseByUserId() throws Exception {
 
@@ -59,6 +60,7 @@ public class CourseController {
     // }
 
     // Nhập tên, số tín chỉ, học kì để tìm kiếm được môn học.
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
     public ResponseEntity<List<Courses>> searchCourses(
             @RequestParam(required = false) String name,

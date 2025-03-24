@@ -10,5 +10,5 @@ import com.example.student_management_backend.domain.Majors;
 
 @Repository
 public interface MajorsRepository extends JpaRepository<Majors, Integer>, JpaSpecificationExecutor<Majors> {
-    Optional<Majors> findByMajorName(String majorName); // Tìm Majors theo majorName
+    Optional<Majors> findByMajorName(String majorName);
 }

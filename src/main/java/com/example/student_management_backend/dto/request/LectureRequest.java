@@ -2,12 +2,6 @@ package com.example.student_management_backend.dto.request;
 
 import java.time.LocalDate;
 
-import com.example.student_management_backend.domain.Gender;
-import com.example.student_management_backend.domain.Status;
-import com.example.student_management_backend.domain.Students;
-
-import jakarta.validation.constraints.NotNull;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;

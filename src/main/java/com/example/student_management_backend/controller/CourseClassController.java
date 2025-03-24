@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,10 +18,11 @@ import java.util.List;
 public class CourseClassController {
     private final ICourseClassService courseClassService;
     private final AuthUtil authUtil;
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     private List<CourseClassScheduleResponse> getCourseClass() throws Exception {
-         Long userID = authUtil.loggedInUserId();
+        Long userID = authUtil.loggedInUserId();
         return courseClassService.getCourseClassSchedule(Math.toIntExact(userID));
     }
 }

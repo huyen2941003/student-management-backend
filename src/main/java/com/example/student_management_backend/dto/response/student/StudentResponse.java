@@ -39,6 +39,7 @@ public class StudentResponse {
             this.phone = student.getPhone();
             this.address = student.getAddress();
             this.status = student.getStatus();
+            this.avatar = student.getAvatar();
 
             if (student.getMajors() != null) {
                 this.majorName = student.getMajors().getMajorName();

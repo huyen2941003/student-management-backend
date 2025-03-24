@@ -1,6 +1,5 @@
 package com.example.student_management_backend.dto.request;
 
-import com.example.student_management_backend.domain.Status;
 import lombok.*;
 
 @Getter

@@ -29,7 +29,7 @@ public class AnnoucementsController {
         return annoucementsService.getAllAnnouncements();
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURER')")
     @PostMapping("")
     public ResponseEntity<Announcements> createAnnouncements(@RequestBody AnnouncementsRequest request)
             throws Exception {
@@ -37,13 +37,14 @@ public class AnnoucementsController {
         return new ResponseEntity<>(announcements, HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteAnnouncement(@PathVariable int id) throws Exception {
         annoucementsService.deleteAnnouncement(id);
         return ResponseEntity.ok().body("Annoucement deleted successfully");
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
     public ResponseEntity<Page<Announcements>> searchAnnouncements(
             @RequestParam(required = false) String title,

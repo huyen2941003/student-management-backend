@@ -1,14 +1,10 @@
 package com.example.student_management_backend.controller;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.domain.Departments;
-import com.example.student_management_backend.domain.Gender;
 import com.example.student_management_backend.domain.Majors;
-import com.example.student_management_backend.domain.Status;
 import com.example.student_management_backend.dto.request.StudentFullRequest;
 import com.example.student_management_backend.dto.request.StudentRequest;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
@@ -67,7 +61,7 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('STUDENT')")
     @PutMapping(value = "/students/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateStudentForStudent(
             @PathVariable Integer id,

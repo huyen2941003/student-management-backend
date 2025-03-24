@@ -54,6 +54,7 @@ public class MajorsController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("isAuthenticated()")
     // Nhập tên chuyên ngành hoặc tên khoa để tìm kiếm chuyên ngành
     @GetMapping("/search")
     public ResponseEntity<List<Majors>> searchMajors(
