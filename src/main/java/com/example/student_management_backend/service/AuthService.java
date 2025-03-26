@@ -1,5 +1,6 @@
 package com.example.student_management_backend.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -8,6 +9,7 @@ import com.example.student_management_backend.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.student_management_backend.dto.request.RegisterRequest;
 import com.example.student_management_backend.dto.response.RegisterResponse;
@@ -17,7 +19,10 @@ import com.example.student_management_backend.repository.MajorsRepository;
 import com.example.student_management_backend.repository.RoleRepository;
 import com.example.student_management_backend.repository.StudentRepository;
 import com.example.student_management_backend.repository.UserRepository;
+import com.example.student_management_backend.util.error.FileStorageException;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,6 +49,9 @@ public class AuthService {
 
         @Autowired
         private DepartmentsRepository departmentsRepository;
+
+        @Autowired
+        private FileStorageService fileStorageService;
 
         private final Random random = new Random();
 
@@ -117,10 +125,11 @@ public class AuthService {
                 Majors major = majorsRepository.findById(registerRequest.getMajorId())
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Major not found with id: " + registerRequest.getMajorId()));
-
-                Departments department = departmentsRepository.findById(registerRequest.getDepartmentId())
+                Departments departments = departmentsRepository.findById(registerRequest.getDepartmentId())
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Department not found with id: " + registerRequest.getDepartmentId()));
+
+                String avatarPath = registerRequest.getAvatarPath();
 
                 Students student = Students.builder()
                                 .fullName(registerRequest.getFullName())
@@ -132,7 +141,8 @@ public class AuthService {
                                 .status(Status.Active)
                                 .user(savedUser)
                                 .majors(major)
-                                .departments(department)
+                                .avatar(avatarPath)
+                                .departments(departments)
                                 .build();
 
                 studentRepository.save(student);
@@ -163,6 +173,8 @@ public class AuthService {
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Department not found with id: " + registerRequest.getDepartmentId()));
 
+                String avatarPath = registerRequest.getAvatarPath();
+
                 Lectures lectures = Lectures.builder()
                                 .fullName(registerRequest.getFullName())
                                 .dob(registerRequest.getDob())
@@ -173,6 +185,7 @@ public class AuthService {
                                 .status(Status.Active)
                                 .user(savedUser)
                                 .departments(department)
+                                .avatar(avatarPath)
                                 .build();
 
                 lectureRepository.save(lectures);
@@ -194,4 +207,20 @@ public class AuthService {
                 return randomDigits + year;
         }
 
+        @Transactional
+        public void deleteUser(Integer userId) {
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
+                if (user.getRole().getRole().equals("ROLE_STUDENT")) {
+                        studentRepository.findByUserId(userId)
+                                        .ifPresent(studentRepository::delete);
+                } else if (user.getRole().getRole().equals("ROLE_LECTURE")) {
+                        lectureRepository.findByUserId(userId)
+                                        .ifPresent(lectureRepository::delete);
+                } else if (user.getRole().getRole().equals("ROLE_ADMIN")) {
+
+                }
+                userRepository.delete(user);
+        }
 }

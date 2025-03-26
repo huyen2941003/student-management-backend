@@ -1,21 +1,31 @@
 package com.example.student_management_backend.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.domain.User;
@@ -27,8 +37,10 @@ import com.example.student_management_backend.repository.UserRepository;
 import com.example.student_management_backend.security.CustomUserDetails;
 import com.example.student_management_backend.security.JwtTokenProvider;
 import com.example.student_management_backend.service.AuthService;
+import com.example.student_management_backend.service.FileStorageService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import com.example.student_management_backend.dto.request.LoginRequest;
 
@@ -70,14 +82,34 @@ public class AuthController {
         return ResponseEntity.ok("Logout thành công");
     }
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> register(
+            @Valid @ModelAttribute RegisterRequest registerRequest,
+            BindingResult bindingResult,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(errors);
+        }
         try {
+            if (avatarFile != null && !avatarFile.isEmpty()) {
+                String avatarPath = fileStorageService.saveAvatarFile(avatarFile);
+                registerRequest.setAvatarFile(avatarFile); // Set file
+                registerRequest.setAvatarPath(avatarPath); // Set path
+            }
+
             RegisterResponse response = authService.register(registerRequest);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi khi lưu ảnh đại diện");
         }
     }
 
@@ -128,5 +160,11 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        authService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

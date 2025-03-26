@@ -70,7 +70,7 @@ public class Students extends BaseEntity {
     @JsonIgnore
     Departments departments;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false, unique = true)
     @JsonIgnore
     private User user;
