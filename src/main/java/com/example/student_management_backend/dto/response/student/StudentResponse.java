@@ -28,6 +28,7 @@ public class StudentResponse {
     private String departmentName;
     private String username;
     private String avatar;
+    private String roleName;
 
     public StudentResponse(Students student) {
         if (student != null) {
@@ -51,6 +52,13 @@ public class StudentResponse {
 
             if (student.getUser() != null) {
                 this.username = student.getUser().getUsername();
+            }
+
+            // Kiểm tra null an toàn
+            if (student.getUser() != null && student.getUser().getRole() != null) {
+                this.roleName = student.getUser().getRole().getRole();
+            } else {
+                this.roleName = null;
             }
         }
     }

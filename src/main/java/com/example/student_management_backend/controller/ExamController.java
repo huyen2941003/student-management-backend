@@ -60,7 +60,7 @@ public class ExamController {
 
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
     public ResponseEntity<Page<Exams>> searchExams(
             @RequestParam(required = false) LocalDate examDate,
