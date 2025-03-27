@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface LectureRepository extends JpaRepository<Lectures, Integer> {
     Optional<Lectures> findByEmail(String email);
 
-    Lectures findByUserId(int userId);
+    Lectures findByUserId(Long userId);
 
     Optional<Lectures> findByUser(User user);
 
@@ -22,5 +22,7 @@ public interface LectureRepository extends JpaRepository<Lectures, Integer> {
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String phoneNumber);
+
+    Integer getLectureByUserId(Long userId);
 
 }

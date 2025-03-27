@@ -1,5 +1,6 @@
 package com.example.student_management_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -11,7 +12,6 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 public class Grades {
 
@@ -32,13 +32,13 @@ public class Grades {
 
     @ManyToOne
     @JoinColumn(name = "studentId", referencedColumnName = "id")
-    @JsonIgnore
+    @JsonBackReference
     Students students;
 
     @ManyToOne
-    @JoinColumn(name = "courseId", referencedColumnName = "id")
+    @JoinColumn(name = "classId", referencedColumnName = "id")
     @JsonIgnore
-    Courses courses;
+    CourseClass coursesClass;
     Double score;
     String semester;
 }

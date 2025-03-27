@@ -5,11 +5,15 @@ import com.example.student_management_backend.domain.Enrollments;
 import com.example.student_management_backend.domain.Status;
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.dto.request.EnrollmentsRequest;
+import com.example.student_management_backend.dto.response.StudentGradeResponse;
 import com.example.student_management_backend.repository.CourseClassRepository;
 import com.example.student_management_backend.repository.EnrollmentsRepository;
 import com.example.student_management_backend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +47,20 @@ public class EnrollmentService {
                 .status(Status.Enrolled)
                 .build();
         return enrollmentsRepository.save(enrollments);
+    }
+
+    public List<StudentGradeResponse> getStudentGradesByClassId(int classId) {
+        List<Object[]> results = enrollmentsRepository.findStudentGradesByClassId(classId);
+        return results.stream().map(obj -> new StudentGradeResponse(
+                (String) obj[0],  // full_name
+                (Integer) obj[1], // classId
+                (Integer) obj[2], // gradeId
+                (Integer) obj[3], // studentId
+                (Double) obj[4],  // midterm_score
+                (Double) obj[5],  // final_score
+                (Double) obj[6],  // total_score
+                (String) obj[7],  // grade
+                (Double) obj[8]   // score
+        )).collect(Collectors.toList());
     }
 }

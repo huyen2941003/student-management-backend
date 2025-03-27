@@ -17,7 +17,7 @@ public class GradeResponse {
     int studentsId;
     String fullName;
 
-    int courseId;
+    int courseClassId;
     String courseName;
 
     public GradeResponse(Grades grades) {
@@ -28,7 +28,7 @@ public class GradeResponse {
         this.grade = grades.getGrade();
         this.studentsId = grades.getStudents().getId();
         this.fullName = grades.getStudents().getFullName();
-        this.courseId = grades.getCourses().getId();
-        this.courseName = grades.getCourses().getName();
+        this.courseClassId = grades.getCoursesClass().getId();
+        this.courseName = grades.getCoursesClass().getCourses().getName();
     }
 }

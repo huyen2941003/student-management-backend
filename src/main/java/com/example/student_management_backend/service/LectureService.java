@@ -80,4 +80,10 @@ public class LectureService {
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Lecture not found with id " + id));
     }
+
+
+    public Lectures getLectureByUserId(Long userId) {
+        return lectureRepository.findByUserId((long) Math.toIntExact(userId));
+
+    }
 }

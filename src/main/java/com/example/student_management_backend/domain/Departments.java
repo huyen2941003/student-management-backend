@@ -10,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class Departments {
     @Id

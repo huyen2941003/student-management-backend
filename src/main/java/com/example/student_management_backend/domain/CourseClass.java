@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseClass {

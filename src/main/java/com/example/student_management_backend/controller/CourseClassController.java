@@ -1,5 +1,7 @@
 package com.example.student_management_backend.controller;
 
+import com.example.student_management_backend.domain.Lectures;
+import com.example.student_management_backend.dto.response.CourseClassResponse;
 import com.example.student_management_backend.dto.response.CourseClassScheduleResponse;
 import com.example.student_management_backend.service.ICourseClassService;
 import com.example.student_management_backend.util.AuthUtil;
@@ -24,5 +26,11 @@ public class CourseClassController {
     private List<CourseClassScheduleResponse> getCourseClass() throws Exception {
         Long userID = authUtil.loggedInUserId();
         return courseClassService.getCourseClassSchedule(Math.toIntExact(userID));
+    }
+
+    @GetMapping("/userId")
+    private List<CourseClassResponse> getCourseClassByTeacherId() throws Exception {
+        Lectures lectureId = authUtil.loggedInLectureId();
+        return courseClassService.getCourseClassByTeacherId(lectureId);
     }
 }

@@ -57,21 +57,21 @@ public class GradeController {
         Grades grade = gradeService.createGrade(request);
         return new ResponseEntity<>(grade, HttpStatus.OK);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("")
-    public ResponseEntity<List<Grades>> getAllGrades() {
-        return ResponseEntity.ok(gradeService.getAllGrades());
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
-    @DeleteMapping
-    public ResponseEntity<Object> deleteGrade(@PathVariable int id) throws Exception {
-        gradeService.deleteGradeById(id);
-        return ResponseEntity.ok().body("Grade deleted successfully");
-
-    }
-
+//
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @GetMapping("")
+//    public ResponseEntity<List<Grades>> getAllGrades() {
+//        return ResponseEntity.ok(gradeService.getAllGrades());
+//    }
+//
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
+//    @DeleteMapping
+//    public ResponseEntity<Object> deleteGrade(@PathVariable int id) throws Exception {
+//        gradeService.deleteGradeById(id);
+//        return ResponseEntity.ok().body("Grade deleted successfully");
+//
+//    }
+//
     @PreAuthorize("hasRole('ADMIN') or hasRole('LECTURE')")
     @PutMapping
     public ResponseEntity<Grades> updateGrade(@RequestBody GradeRequest request) throws Exception {
@@ -79,39 +79,39 @@ public class GradeController {
         return new ResponseEntity<>(grade, HttpStatus.OK);
 
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/search")
-    public ResponseEntity<Page<Grades>> searchGrades(
-            @RequestParam(required = false) Double midtermScore,
-            @RequestParam(required = false) Double midtermScoreMin,
-            @RequestParam(required = false) Double midtermScoreMax,
-            @RequestParam(required = false) Double finalScore,
-            @RequestParam(required = false) Double finalScoreMin,
-            @RequestParam(required = false) Double finalScoreMax,
-            @RequestParam(required = false) Double totalScore,
-            @RequestParam(required = false) Double totalScoreMin,
-            @RequestParam(required = false) Double totalScoreMax,
-            @RequestParam(required = false) String semester,
-            @RequestParam(required = false) Integer studentId,
-            @RequestParam(required = false) Integer courseId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
-
-        Pageable pageable = PageRequest.of(page, size,
-                Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1]))));
-
-        Page<Grades> grades = gradeService.searchGrades(
-                midtermScore, midtermScoreMin, midtermScoreMax,
-                finalScore, finalScoreMin, finalScoreMax,
-                totalScore, totalScoreMin, totalScoreMax,
-                semester, studentId, courseId,
-                pageable);
-
-        return ResponseEntity.ok(grades);
-    }
-
+//
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/search")
+//    public ResponseEntity<Page<Grades>> searchGrades(
+//            @RequestParam(required = false) Double midtermScore,
+//            @RequestParam(required = false) Double midtermScoreMin,
+//            @RequestParam(required = false) Double midtermScoreMax,
+//            @RequestParam(required = false) Double finalScore,
+//            @RequestParam(required = false) Double finalScoreMin,
+//            @RequestParam(required = false) Double finalScoreMax,
+//            @RequestParam(required = false) Double totalScore,
+//            @RequestParam(required = false) Double totalScoreMin,
+//            @RequestParam(required = false) Double totalScoreMax,
+//            @RequestParam(required = false) String semester,
+//            @RequestParam(required = false) Integer studentId,
+//            @RequestParam(required = false) Integer courseId,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size,
+//            @RequestParam(defaultValue = "id,asc") String[] sort) {
+//
+//        Pageable pageable = PageRequest.of(page, size,
+//                Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1]))));
+//
+//        Page<Grades> grades = gradeService.searchGrades(
+//                midtermScore, midtermScoreMin, midtermScoreMax,
+//                finalScore, finalScoreMin, finalScoreMax,
+//                totalScore, totalScoreMin, totalScoreMax,
+//                semester, studentId, courseId,
+//                pageable);
+//
+//        return ResponseEntity.ok(grades);
+//    }
+//
     @GetMapping("/total")
     public ResponseEntity<Double> getTotalGPA() throws Exception {
         Integer studentId = authUtil.loggedInStudentId();

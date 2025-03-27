@@ -10,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Getter
+@Setter
 
 @RequiredArgsConstructor
 public class Courses {
@@ -31,7 +32,7 @@ public class Courses {
     @JsonIgnore
     Majors majors;
 
-    @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Grades> grades;
+//    @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private List<Grades> grades;
 }

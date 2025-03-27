@@ -1,5 +1,8 @@
 package com.example.student_management_backend.service;
 
+import com.example.student_management_backend.domain.CourseClass;
+import com.example.student_management_backend.domain.Lectures;
+import com.example.student_management_backend.dto.response.CourseClassResponse;
 import com.example.student_management_backend.dto.response.CourseClassScheduleResponse;
 import com.example.student_management_backend.repository.CourseClassRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +14,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseCLassService implements ICourseClassService {
     private final CourseClassRepository courseClassRepository;
+
     @Override
     public List<CourseClassScheduleResponse> getCourseClassSchedule(int userId) {
-        return courseClassRepository.getCourseChedule(userId) ;
+        return courseClassRepository.getCourseChedule(userId);
     }
+
+    @Override
+    public List<CourseClassResponse> getCourseClassByTeacherId(Lectures lectureId) {
+        return courseClassRepository.findByLectureId(lectureId.getId());
+    }
+
+
 }

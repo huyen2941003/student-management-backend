@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 public class GradeRequest {
     private int id;
-    private double midtermScore;
-    private double finalScore;
-    private int courseId;
+    private Double  midtermScore;
+    private Double  finalScore;
+    private int courseClassId;
     private int studentId;
 }

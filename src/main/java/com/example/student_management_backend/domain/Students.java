@@ -1,5 +1,6 @@
 package com.example.student_management_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +24,6 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "student")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -74,7 +75,9 @@ public class Students extends BaseEntity {
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false, unique = true)
     @JsonIgnore
     private User user;
-
+    @OneToMany(mappedBy = "students", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Grades> grades;
     // Getter và Setter
     public Majors getMajors() {
         return majors;
