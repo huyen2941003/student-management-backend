@@ -133,4 +133,10 @@ public class LectureController {
             return ResponseEntity.badRequest().body("An error occurred: " + e.getMessage());
         }
     }
+
+    @DeleteMapping("/lectures/{id}")
+    public ResponseEntity<Void> deleteLecture(@PathVariable Integer id) {
+        lectureService.deleteLecture(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -9,17 +9,25 @@ import org.springframework.stereotype.Service;
 import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.repository.StudentRepository;
-
+import com.example.student_management_backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
 public class StudentService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private StudentRepository studentRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    StudentService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // Lấy thông tin sinh viên theo ID
     public StudentResponse getStudentById(Integer id) {
@@ -86,5 +94,14 @@ public class StudentService {
     public Integer getStudentByUserId(Long userId) {
         return studentRepository.findByUserId(Math.toIntExact(userId)).getId();
 
+    }
+
+    @Transactional
+    public void deleteStudent(Integer studentId) {
+        studentRepository.findUserIdByStudentId(studentId).ifPresent(userId -> {
+            userRepository.hardDeleteUser(userId);
+        });
+
+        studentRepository.hardDelete(studentId);
     }
 }

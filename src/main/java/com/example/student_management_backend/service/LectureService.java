@@ -1,6 +1,7 @@
 package com.example.student_management_backend.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +10,25 @@ import org.springframework.stereotype.Service;
 import com.example.student_management_backend.domain.Lectures;
 import com.example.student_management_backend.dto.response.lecture.LectureResponse;
 import com.example.student_management_backend.repository.LectureRepository;
+import com.example.student_management_backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
 public class LectureService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private LectureRepository lectureRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    LectureService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // Lấy thông tin sinh viên theo ID
     public LectureResponse getLectureById(Integer id) {
@@ -81,9 +91,12 @@ public class LectureService {
                 .orElseThrow(() -> new ResourceNotFoundException("Lecture not found with id " + id));
     }
 
+    @Transactional
+    public void deleteLecture(Integer lectureId) {
+        Optional<Integer> userIdOpt = lectureRepository.findUserIdByLectureId(lectureId);
 
-    public Lectures getLectureByUserId(Long userId) {
-        return lectureRepository.findByUserId((long) Math.toIntExact(userId));
+        lectureRepository.hardDelete(lectureId);
 
+        userIdOpt.ifPresent(userId -> userRepository.hardDeleteUser(userId));
     }
 }

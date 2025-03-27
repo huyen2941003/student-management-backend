@@ -3,6 +3,8 @@ package com.example.student_management_backend.controller;
 import com.example.student_management_backend.domain.User;
 import com.example.student_management_backend.dto.request.FcmTokenRequest;
 import com.example.student_management_backend.repository.UserRepository;
+import com.example.student_management_backend.service.AuthService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,4 +27,5 @@ public class UserController {
         userRepository.save(user);
         return ResponseEntity.ok("FCM Token đã được cập nhật!");
     }
+
 }

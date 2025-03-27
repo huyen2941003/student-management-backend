@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,4 +25,16 @@ public interface StudentRepository extends JpaRepository<Students, Integer> {
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String phoneNumber);
+    Optional<Students> findByUserId(Integer userId);
+
+    @Modifying
+    @Query(value = "DELETE FROM student WHERE id = :id", nativeQuery = true)
+    void hardDelete(@Param("id") Integer id);
+
+    @Query(value = "SELECT userId FROM student WHERE id = :studentId", nativeQuery = true)
+    Optional<Integer> findUserIdByStudentId(@Param("studentId") Integer studentId);
+
+    @Modifying
+    @Query(value = "DELETE FROM user WHERE id = (SELECT userId FROM student WHERE id = :studentId)", nativeQuery = true)
+    void hardDeleteUserByStudentId(@Param("studentId") Integer studentId);
 }

@@ -2,7 +2,10 @@ package com.example.student_management_backend.dto.request;
 
 import java.time.LocalDate;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.student_management_backend.domain.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,4 +30,7 @@ public class RegisterRequest {
     private String address;
     private Integer majorId;
     private Integer departmentId;
+    @JsonIgnore
+    private transient MultipartFile avatarFile;
+    private String avatarPath;
 }
