@@ -99,4 +99,8 @@ public class LectureService {
 
         userIdOpt.ifPresent(userId -> userRepository.hardDeleteUser(userId));
     }
+
+    public Lectures getLectureByUserId(Long userId) {
+        return lectureRepository.findByUserId(userId);
+    }
 }
