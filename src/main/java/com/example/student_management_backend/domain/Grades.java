@@ -20,13 +20,13 @@ public class Grades {
     private Integer id;
 
     @Column(name = "midterm_score")
-    private double midtermScore;
+    private Double midtermScore;
 
     @Column(name = "final_score")
-    private double finalScore;
+    private Double finalScore;
 
     @Column(name = "total_score")
-    private double totalScore;
+    private Double totalScore;
 
     private String grade;
 

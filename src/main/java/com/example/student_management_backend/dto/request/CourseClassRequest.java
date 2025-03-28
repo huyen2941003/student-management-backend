@@ -1,5 +1,4 @@
 package com.example.student_management_backend.dto.request;
-
 import lombok.*;
 
 @Getter
@@ -7,8 +6,8 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Builder
-public class EnrollmentsRequest {
-    private int classId;
-    private String status;
+public class CourseClassRequest {
+    private Integer courseId;
+    private int maxStudent;
+
 }

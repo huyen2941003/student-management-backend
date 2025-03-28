@@ -30,5 +30,9 @@ public class CourseClass {
     Courses courses;
 
     int semester;
+    @ManyToOne
+    @JoinColumn(name = "lectureId", referencedColumnName = "id")
+    @JsonIgnore
+    Lectures lecture;
 
 }

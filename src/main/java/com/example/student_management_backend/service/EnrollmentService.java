@@ -1,13 +1,11 @@
 package com.example.student_management_backend.service;
 
-import com.example.student_management_backend.domain.CourseClass;
-import com.example.student_management_backend.domain.Enrollments;
-import com.example.student_management_backend.domain.Status;
-import com.example.student_management_backend.domain.Students;
+import com.example.student_management_backend.domain.*;
 import com.example.student_management_backend.dto.request.EnrollmentsRequest;
 import com.example.student_management_backend.dto.response.StudentGradeResponse;
 import com.example.student_management_backend.repository.CourseClassRepository;
 import com.example.student_management_backend.repository.EnrollmentsRepository;
+import com.example.student_management_backend.repository.GradeRepository;
 import com.example.student_management_backend.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +19,9 @@ public class EnrollmentService {
     private  final EnrollmentsRepository enrollmentsRepository;
     private final StudentRepository studentRepository;
     private final CourseClassRepository courseClassRepository;
-    public Enrollments registerCourseClass(EnrollmentsRequest request) throws Exception {
-        Students students = studentRepository.findById(request.getStudentId())
+    private final GradeRepository gradeRepository;
+    public Enrollments registerCourseClass(EnrollmentsRequest request, Integer studentId) throws Exception {
+        Students students = studentRepository.findById(studentId)
                 .orElseThrow(
                         ()-> new Exception("Student dont exist")
                 );
@@ -31,7 +30,7 @@ public class EnrollmentService {
                         ()-> new Exception("CourseClass dont exist")
                 );
 
-        if (enrollmentsRepository.existsByStudents_IdAndClasses_IdAndStatusNot(request.getStudentId(), request.getClassId(),Status.Cancelled)) {
+        if (enrollmentsRepository.existsByStudents_IdAndClasses_IdAndStatusNot(studentId, request.getClassId(),Status.Cancelled)) {
             throw new Exception("Bạn đã đăng ký lớp này rồi");
         }
 
@@ -46,7 +45,17 @@ public class EnrollmentService {
                 .classes(courseClass)
                 .status(Status.Enrolled)
                 .build();
-        return enrollmentsRepository.save(enrollments);
+        Enrollments enrollments1 = enrollmentsRepository.save(enrollments);
+        Grades grades = new Grades();
+        grades.setCoursesClass(courseClass);
+        grades.setGrade(null);
+        grades.setSemester(String.valueOf(courseClass.getSemester()));
+        grades.setStudents(students);
+        grades.setMidtermScore(null);
+        grades.setFinalScore(null);
+        grades.setTotalScore(null);
+        gradeRepository.save(grades);
+        return  enrollments1;
     }
 
     public List<StudentGradeResponse> getStudentGradesByClassId(int classId) {

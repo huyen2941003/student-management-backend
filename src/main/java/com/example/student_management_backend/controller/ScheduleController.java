@@ -1,5 +1,6 @@
 package com.example.student_management_backend.controller;
 
+import com.example.student_management_backend.domain.Lectures;
 import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.request.ScheduleCourseRequest;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
@@ -37,6 +38,17 @@ public class ScheduleController {
         Integer studentId = authUtil.loggedInStudentId();
         return ResponseEntity.ok(scheduleService.getSchedule(studentId, start, end));
     }
+
+    @GetMapping("/lectureId")
+    public ResponseEntity<List<ScheduleResponse>> getScheduleByLectureId(
+            @RequestParam String startDate,
+            @RequestParam String endDate) throws Exception {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        Integer lectureId = authUtil.loggedInLectureId().getId();
+        return ResponseEntity.ok(scheduleService.getScheduleByLectureId(lectureId, start, end));
+    }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")

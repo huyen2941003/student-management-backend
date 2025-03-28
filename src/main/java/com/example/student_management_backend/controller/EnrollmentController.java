@@ -4,6 +4,7 @@ import com.example.student_management_backend.domain.Enrollments;
 import com.example.student_management_backend.dto.request.EnrollmentsRequest;
 import com.example.student_management_backend.dto.response.StudentGradeResponse;
 import com.example.student_management_backend.service.EnrollmentService;
+import com.example.student_management_backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,13 @@ import java.util.List;
 @RequestMapping("api/v1/enrollment")
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
+    private final AuthUtil authUtil;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<Enrollments> registerCourseClass(@RequestBody EnrollmentsRequest request) throws Exception {
-        Enrollments enrollments = enrollmentService.registerCourseClass(request);
+        Integer studentId = authUtil.loggedInStudentId();
+
+        Enrollments enrollments = enrollmentService.registerCourseClass(request,studentId);
         if (enrollments == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
