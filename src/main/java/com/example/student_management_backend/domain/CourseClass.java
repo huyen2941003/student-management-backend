@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,5 +36,7 @@ public class CourseClass {
     @JoinColumn(name = "lectureId", referencedColumnName = "id")
     @JsonIgnore
     Lectures lecture;
+    @OneToMany(mappedBy = "courses", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules = new ArrayList<>();
 
 }

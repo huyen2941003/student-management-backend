@@ -37,4 +37,7 @@ public class Schedule {
     private LocalTime endTime;
 
     private String room;
+
+    private LocalDate endDate;
+
 }

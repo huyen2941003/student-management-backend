@@ -38,4 +38,6 @@ public interface EnrollmentsRepository extends JpaRepository<Enrollments,Integer
             "WHERE c.id = :classId",
             nativeQuery = true)
     List<Object[]> findStudentGradesByClassId(@Param("classId") int classId);
+
+    List<Enrollments> findByStudents_IdAndStatus(Integer studentId, Status enrolled);
 }
