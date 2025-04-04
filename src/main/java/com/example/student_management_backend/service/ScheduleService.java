@@ -17,8 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,16 +31,18 @@ public class ScheduleService {
         List<Object[]> results = scheduleRepository.getScheduleByStudentId(studentId, startDate, endDate);
 
         return results.stream().map(obj -> new ScheduleResponse(
-                (String) obj[0],  // courseName
-                ((java.sql.Date) obj[1]).toLocalDate(),  // Chuyển đổi date
-                ((java.sql.Time) obj[2]).toLocalTime(),  // Chuyển đổi startTime
-                ((java.sql.Time) obj[3]).toLocalTime(),  // Chuyển đổi endTime
-                (String) obj[4],  // room
-                (Integer) obj[5],  // lectureId
-                obj[6] != null ? ((java.sql.Date) obj[6]).toLocalDate() : null,  // endDate, kiểm tra null
-                obj[7] != null ? ((Number) obj[7]).longValue() : null,  // classScheduleId
-                obj[8] != null ? ((Number) obj[8]).longValue() : null,  // dayOfWeekId
-                (String) obj[9]   // dayName
+                (Integer) obj[0],
+                (String) obj[1],  // courseName
+                ((java.sql.Date) obj[2]).toLocalDate(),  // Chuyển đổi date
+                ((java.sql.Time) obj[3]).toLocalTime(),  // Chuyển đổi startTime
+                ((java.sql.Time) obj[4]).toLocalTime(),  // Chuyển đổi endTime
+                (String) obj[5],  // room
+                (Integer) obj[6],  // lectureId
+                (String) obj[7], // fullname
+                obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null,  // endDate, kiểm tra null
+                obj[9] != null ? ((Number) obj[9]).longValue() : null,  // classScheduleId
+                obj[10] != null ? ((Number) obj[10]).longValue() : null,  // dayOfWeekId
+                (String) obj[11]
         )).toList();
     }
 
@@ -89,13 +90,41 @@ public class ScheduleService {
 
 
     public List<ScheduleResponse> getAllSchedule() {
-        return scheduleRepository.findAll().stream()
-                .map(schedule -> new ScheduleResponse(
-                        schedule.getCourses().getCourses().getName(),
-                        schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
-                        schedule.getRoom(), schedule.getCourses().getLecture().getId(),schedule.getEndDate()))
-                .collect(Collectors.toList());
+        List<Object[]> results = scheduleRepository.getAllSchedules();
+
+        // Sử dụng Map để nhóm dữ liệu theo scheduleId
+        Map<Long, ScheduleResponse> scheduleMap = new LinkedHashMap<>();
+
+        for (Object[] obj : results) {
+            Long id = ((Number) obj[0]).longValue();
+            String courseName = (String) obj[1];
+            LocalDate date = ((java.sql.Date) obj[2]).toLocalDate();
+            LocalTime startTime = ((java.sql.Time) obj[3]).toLocalTime();
+            LocalTime endTime = ((java.sql.Time) obj[4]).toLocalTime();
+            String room = (String) obj[5];
+            Integer lectureId = (Integer) obj[6];
+            String fullName = (String) obj[7];
+            LocalDate endDate = obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null;
+            Long classScheduleId =  obj[9] != null ? ((Number) obj[9]).longValue() : null;  // classScheduleId
+            Long dayOfWeekId = obj[10] != null ? ((Number) obj[10]).longValue() : null;
+            String dayName = obj[11] != null ? (String) obj[11] : null;
+
+            // Nếu Schedule đã tồn tại trong Map, chỉ thêm dayName
+            if (scheduleMap.containsKey(id)) {
+                scheduleMap.get(id).getDayNames().add(dayName);
+            } else {
+                ScheduleResponse scheduleResponse = new ScheduleResponse(
+                        Math.toIntExact(id), courseName, date, startTime, endTime, room, lectureId,fullName, endDate,classScheduleId,dayOfWeekId, new ArrayList<>()
+                );
+                if (dayName != null) {
+                    scheduleResponse.getDayNames().add(dayName);
+                }
+                scheduleMap.put(id, scheduleResponse);
+            }
+        }
+        return new ArrayList<>(scheduleMap.values());
     }
+
 
     public void deleteScheduleById(int id) throws Exception {
         Schedule schedule = scheduleRepository.findById(id)
@@ -137,16 +166,18 @@ public class ScheduleService {
         List<Object[]> results = scheduleRepository.getScheduleByLectureId(lectureId, startDate, endDate);
 
         return results.stream().map(obj -> new ScheduleResponse(
-                (String) obj[0],  // courseName
-                ((java.sql.Date) obj[1]).toLocalDate(),  // Chuyển đổi date
-                ((java.sql.Time) obj[2]).toLocalTime(),  // Chuyển đổi startTime
-                ((java.sql.Time) obj[3]).toLocalTime(),  // Chuyển đổi endTime
-                (String) obj[4],  // room
-                (Integer) obj[5],  // lectureId
-                obj[6] != null ? ((java.sql.Date) obj[6]).toLocalDate() : null,  // endDate, kiểm tra null
-                obj[7] != null ? ((Number) obj[7]).longValue() : null,  // classScheduleId
-                obj[8] != null ? ((Number) obj[8]).longValue() : null,  // dayOfWeekId
-                (String) obj[9]   // dayName
+                (Integer) obj[0],
+                (String) obj[1],  // courseName
+                ((java.sql.Date) obj[2]).toLocalDate(),  // Chuyển đổi date
+                ((java.sql.Time) obj[3]).toLocalTime(),  // Chuyển đổi startTime
+                ((java.sql.Time) obj[4]).toLocalTime(),  // Chuyển đổi endTime
+                (String) obj[5],  // room
+                (Integer) obj[6],  // lectureId
+                (String) obj[7], // fullname
+                obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null,  // endDate, kiểm tra null
+                obj[9] != null ? ((Number) obj[9]).longValue() : null,  // classScheduleId
+                obj[10] != null ? ((Number) obj[10]).longValue() : null,  // dayOfWeekId
+                (String) obj[11]
         )).toList();
     }
 }
