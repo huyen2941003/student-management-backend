@@ -24,8 +24,8 @@ public class CourseClassController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     private List<CourseClassScheduleResponse> getCourseClass() throws Exception {
-        Long userID = authUtil.loggedInUserId();
-        return courseClassService.getCourseClassSchedule(Math.toIntExact(userID));
+        Integer studentId = authUtil.loggedInStudentId();
+        return courseClassService.getCourseClassSchedule(Math.toIntExact(studentId));
     }
 
     @GetMapping("/userId")

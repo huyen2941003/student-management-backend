@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CourseClassResponse {
     private int id;
-//    private int courseClassId;
+    private int courseClassId;
     private int maxStudent;
     private int semester;
     private String courseName;

@@ -21,8 +21,8 @@ public class CourseCLassService implements ICourseClassService {
     private final CourseClassRepository courseClassRepository;
     private final CourseRepository courseRepository;
     @Override
-    public List<CourseClassScheduleResponse> getCourseClassSchedule(int userId) {
-        return courseClassRepository.getCourseChedule(userId);
+    public List<CourseClassScheduleResponse> getCourseClassSchedule(int studentId) {
+        return courseClassRepository.getCourseChedule(studentId);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CourseCLassService implements ICourseClassService {
         courseClass.setSemester(courses.getSemester());
         courseClassRepository.save(courseClass);
 
-        return new CourseClassResponse(courseClass.getId()
+        return new CourseClassResponse(courseClass.getId(),courseClass.getCourses().getId()
                 ,courseClass.getSemester(),courseClass.getMaxStudent(),
                 courseClass.getCourses().getName());
     }

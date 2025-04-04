@@ -8,7 +8,7 @@ import com.example.student_management_backend.dto.response.CourseClassScheduleRe
 import java.util.List;
 
 public interface ICourseClassService {
-    List<CourseClassScheduleResponse> getCourseClassSchedule(int userId);
+    List<CourseClassScheduleResponse> getCourseClassSchedule(int studentId);
 
 
     List<CourseClassResponse> getCourseClassByTeacherId(Lectures lectureId);
