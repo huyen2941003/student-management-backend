@@ -1,8 +1,10 @@
 package com.example.student_management_backend.controller;
 
+import com.example.student_management_backend.domain.CourseClass;
 import com.example.student_management_backend.domain.Lectures;
 import com.example.student_management_backend.domain.Schedule;
 import com.example.student_management_backend.dto.request.ScheduleCourseRequest;
+import com.example.student_management_backend.dto.response.CourseClassResponse;
 import com.example.student_management_backend.dto.response.ScheduleResponse;
 import com.example.student_management_backend.service.ScheduleService;
 import com.example.student_management_backend.util.AuthUtil;
@@ -49,7 +51,6 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.getScheduleByLectureId(lectureId, start, end));
     }
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody ScheduleCourseRequest request)
@@ -81,7 +82,7 @@ public class ScheduleController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
-    public ResponseEntity<Page<Schedule>> searchSchedules(
+    public ResponseEntity<Page<CourseClassResponse>> searchSchedules(
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) LocalDate dateFrom,
             @RequestParam(required = false) LocalDate dateTo,
@@ -103,6 +104,8 @@ public class ScheduleController {
                 room, courseName, classId,
                 pageable);
 
-        return ResponseEntity.ok(schedules);
+        Page<CourseClassResponse> response = schedules.map(schedule -> new CourseClassResponse(schedule.getCourses()));
+
+        return ResponseEntity.ok(response);
     }
 }

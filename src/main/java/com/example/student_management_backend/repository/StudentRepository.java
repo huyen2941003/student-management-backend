@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 public interface StudentRepository extends JpaRepository<Students, Integer> {
     Optional<Students> findByEmail(String email);
 
+    @Query(value = "SELECT s.* FROM student s JOIN user u ON s.userId = u.id WHERE u.username = :username", nativeQuery = true)
+    Optional<Students> findByUsername(@Param("username") String username);
+
     Students findByUserId(int userId);
 
     Optional<Students> findByUser(User user);
@@ -25,6 +28,7 @@ public interface StudentRepository extends JpaRepository<Students, Integer> {
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String phoneNumber);
+
     Optional<Students> findByUserId(Integer userId);
 
     @Modifying

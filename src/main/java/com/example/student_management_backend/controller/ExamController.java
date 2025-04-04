@@ -62,7 +62,7 @@ public class ExamController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
-    public ResponseEntity<Page<Exams>> searchExams(
+    public ResponseEntity<Page<ExamsScheduleResponse>> searchExams(
             @RequestParam(required = false) LocalDate examDate,
             @RequestParam(required = false) LocalDate examDateFrom,
             @RequestParam(required = false) LocalDate examDateTo,
@@ -84,6 +84,8 @@ public class ExamController {
                 room, courseName, classId,
                 pageable);
 
-        return ResponseEntity.ok(exams);
+        Page<ExamsScheduleResponse> response = exams.map(ExamsScheduleResponse::new);
+
+        return ResponseEntity.ok(response);
     }
 }
