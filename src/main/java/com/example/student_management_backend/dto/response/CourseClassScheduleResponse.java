@@ -1,5 +1,6 @@
 package com.example.student_management_backend.dto.response;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,5 +13,4 @@ import java.time.LocalDateTime;
 public class CourseClassScheduleResponse {
     private String name;
     private LocalDateTime schedule;
-
 }
