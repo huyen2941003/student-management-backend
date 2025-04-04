@@ -3,6 +3,7 @@ package com.example.student_management_backend.service;
 import com.example.student_management_backend.domain.*;
 import com.example.student_management_backend.dto.request.EnrollmentsRequest;
 import com.example.student_management_backend.dto.response.StudentGradeResponse;
+import com.example.student_management_backend.exception.CustomException;
 import com.example.student_management_backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,14 @@ public class EnrollmentService {
         boolean alreadyEnrolled = enrollmentsRepository.existsByStudents_IdAndClasses_IdAndStatusNot(
                 studentId, request.getClassId(), Status.Cancelled);
         if (alreadyEnrolled) {
-            throw new IllegalStateException("Bạn đã đăng ký lớp này rồi");
+            throw new CustomException("Bạn đã đăng ký lớp này rồi");
         }
 
         // Kiểm tra số lượng sinh viên trong lớp
         long currentEnrollment = enrollmentsRepository.countByClasses_IdAndStatus(
                 (long) request.getClassId(), Status.Enrolled.name());
         if (currentEnrollment >= courseClass.getMaxStudent()) {
-            throw new IllegalStateException("Lớp học đã đủ số lượng, không thể đăng ký!");
+            throw new CustomException("Lớp học đã đủ số lượng, không thể đăng ký!");
         }
 
         // Kiểm tra trùng lịch học - Phương pháp cải tiến
@@ -72,7 +73,7 @@ public class EnrollmentService {
                             // Xác định tên ngày để hiển thị thông báo lỗi
                             String dayName = getDayNameFromSchedules(newSchedule, existingSchedule);
                             String timeInfo = existingSchedule.getStartTime() + " - " + existingSchedule.getEndTime();
-                            throw new IllegalStateException("Bạn đã có lớp học vào khung giờ " +
+                            throw new CustomException("Bạn đã có lớp học vào khung giờ " +
                                     timeInfo + " vào " + dayName);
                         }
                     }
