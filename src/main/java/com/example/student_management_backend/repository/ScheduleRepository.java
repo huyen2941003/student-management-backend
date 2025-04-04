@@ -13,31 +13,31 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer>, JpaSpecificationExecutor<Schedule> {
 
     @Query(value = """ 
-        SELECT  
+    SELECT  
         s.id,
-            c2.name AS courseName,  
-            s.date AS date,  
-            s.start_time AS startTime,  
-            s.end_time AS endTime,  
-            s.room AS room, 
-            c.lectureId AS lectureId, 
-            l.full_name as fullName,
-            s.endDate AS endDate,
-            cs.classScheduleId AS classScheduleId,
-            d.id AS dayOfWeekId,
-            d.dayName AS dayName
-        FROM schedule s 
-        JOIN courseclass c ON s.classId = c.id 
-        JOIN courses c2 ON c.courseId = c2.id 
-        LEFT JOIN classschedule cs ON cs.schedule_id = s.id
-        LEFT JOIN dayofweek d ON cs.day_id = d.id
-        LEFT JOIN lecture l on c.lectureId = l.id
-        WHERE c.id IN ( 
-            SELECT e.classId FROM enrollments e WHERE e.studentId = :studentId 
-        ) 
-        AND s.date BETWEEN :startDate AND :endDate 
-        ORDER BY s.date, s.start_time 
-        """, nativeQuery = true)
+        c2.name AS courseName,  
+        s.date AS date,  
+        s.start_time AS startTime,  
+        s.end_time AS endTime,  
+        s.room AS room, 
+        c.lectureId AS lectureId, 
+        l.full_name as fullName,
+        s.endDate AS endDate,
+        cs.classScheduleId AS classScheduleId,
+        d.id AS dayOfWeekId,
+        d.dayName AS dayName
+    FROM schedule s 
+    JOIN courseclass c ON s.classId = c.id 
+    JOIN courses c2 ON c.courseId = c2.id 
+    LEFT JOIN classschedule cs ON cs.schedule_id = s.id
+    LEFT JOIN dayofweek d ON cs.day_id = d.id
+    LEFT JOIN lecture l on c.lectureId = l.id
+    WHERE c.id IN ( 
+        SELECT e.classId FROM enrollments e WHERE e.studentId = :studentId 
+    ) 
+    AND (s.date<= :endDate AND s.endDate >= :startDate )
+    ORDER BY s.date, s.start_time 
+    """, nativeQuery = true)
     List<Object[]> getScheduleByStudentId(
             @Param("studentId") Integer studentId,
             @Param("startDate") LocalDate startDate,
