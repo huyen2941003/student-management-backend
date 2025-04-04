@@ -68,7 +68,7 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/students/me") // Endpoint mới
+    @GetMapping("/students/me")
     public ResponseEntity<?> getCurrentStudent() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         StudentResponse response = studentService.getStudentByUsername(username);
