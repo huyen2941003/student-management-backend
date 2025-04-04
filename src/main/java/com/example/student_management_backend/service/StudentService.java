@@ -32,7 +32,13 @@ public class StudentService {
     // Lấy thông tin sinh viên theo ID
     public StudentResponse getStudentById(Integer id) {
         Students student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không có sinh viên nào có id: " + id));
+                .orElseThrow(() -> new RuntimeException("Không có sinh viên nào"));
+        return new StudentResponse(student);
+    }
+
+    public StudentResponse getStudentByUsername(String username) {
+        Students student = studentRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên"));
         return new StudentResponse(student);
     }
 

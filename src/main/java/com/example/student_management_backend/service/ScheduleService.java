@@ -27,25 +27,24 @@ public class ScheduleService {
     private final CourseClassRepository courseClassRepository;
     private final DayOfWeekRepository dayOfWeekRepository;
     private final ClassScheduleRepository classScheduleRepository;
+
     public List<ScheduleResponse> getSchedule(int studentId, LocalDate startDate, LocalDate endDate) {
         List<Object[]> results = scheduleRepository.getScheduleByStudentId(studentId, startDate, endDate);
 
         return results.stream().map(obj -> new ScheduleResponse(
                 (Integer) obj[0],
-                (String) obj[1],  // courseName
-                ((java.sql.Date) obj[2]).toLocalDate(),  // Chuyển đổi date
-                ((java.sql.Time) obj[3]).toLocalTime(),  // Chuyển đổi startTime
-                ((java.sql.Time) obj[4]).toLocalTime(),  // Chuyển đổi endTime
-                (String) obj[5],  // room
-                (Integer) obj[6],  // lectureId
+                (String) obj[1], // courseName
+                ((java.sql.Date) obj[2]).toLocalDate(), // Chuyển đổi date
+                ((java.sql.Time) obj[3]).toLocalTime(), // Chuyển đổi startTime
+                ((java.sql.Time) obj[4]).toLocalTime(), // Chuyển đổi endTime
+                (String) obj[5], // room
+                (Integer) obj[6], // lectureId
                 (String) obj[7], // fullname
-                obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null,  // endDate, kiểm tra null
-                obj[9] != null ? ((Number) obj[9]).longValue() : null,  // classScheduleId
-                obj[10] != null ? ((Number) obj[10]).longValue() : null,  // dayOfWeekId
-                (String) obj[11]
-        )).toList();
+                obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null, // endDate, kiểm tra null
+                obj[9] != null ? ((Number) obj[9]).longValue() : null, // classScheduleId
+                obj[10] != null ? ((Number) obj[10]).longValue() : null, // dayOfWeekId
+                (String) obj[11])).toList();
     }
-
 
     public ScheduleResponse createSchedule(ScheduleCourseRequest request) throws Exception {
         // Tìm CourseClass bằng ID
@@ -60,7 +59,8 @@ public class ScheduleService {
         schedule.setRoom(request.getRoom());
         schedule.setDate(request.getDate());
         schedule.setEndDate(request.getEndDate());
-        // Lưu Schedule (lưu các thông tin chung như thời gian bắt đầu, kết thúc, phòng học)
+        // Lưu Schedule (lưu các thông tin chung như thời gian bắt đầu, kết thúc, phòng
+        // học)
         schedule = scheduleRepository.save(schedule);
 
         // Thêm các ngày học cho môn học (ví dụ: Thứ 2, Thứ 4)
@@ -84,10 +84,8 @@ public class ScheduleService {
                 schedule.getEndTime(),
                 schedule.getRoom(),
                 schedule.getCourses().getLecture().getId(),
-                schedule.getEndDate()
-        );
+                schedule.getEndDate());
     }
-
 
     public List<ScheduleResponse> getAllSchedule() {
         List<Object[]> results = scheduleRepository.getAllSchedules();
@@ -105,7 +103,7 @@ public class ScheduleService {
             Integer lectureId = (Integer) obj[6];
             String fullName = (String) obj[7];
             LocalDate endDate = obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null;
-            Long classScheduleId =  obj[9] != null ? ((Number) obj[9]).longValue() : null;  // classScheduleId
+            Long classScheduleId = obj[9] != null ? ((Number) obj[9]).longValue() : null; // classScheduleId
             Long dayOfWeekId = obj[10] != null ? ((Number) obj[10]).longValue() : null;
             String dayName = obj[11] != null ? (String) obj[11] : null;
             Integer courseClassId = (Integer) obj[12];
@@ -115,8 +113,8 @@ public class ScheduleService {
                 scheduleMap.get(id).getDayNames().add(dayName);
             } else {
                 ScheduleResponse scheduleResponse = new ScheduleResponse(
-                        Math.toIntExact(id), courseName, date, startTime, endTime, room, lectureId,fullName, endDate,classScheduleId,dayOfWeekId, new ArrayList<>(),courseClassId
-                );
+                        Math.toIntExact(id), courseName, date, startTime, endTime, room, lectureId, fullName, endDate,
+                        classScheduleId, dayOfWeekId, new ArrayList<>(), courseClassId);
                 if (dayName != null) {
                     scheduleResponse.getDayNames().add(dayName);
                 }
@@ -125,7 +123,6 @@ public class ScheduleService {
         }
         return new ArrayList<>(scheduleMap.values());
     }
-
 
     public void deleteScheduleById(int id) throws Exception {
         Schedule schedule = scheduleRepository.findById(id)
@@ -136,10 +133,14 @@ public class ScheduleService {
     public List<Schedule> filterSchedules(LocalDate date, LocalTime startTime, LocalTime endTime, String room) {
         Specification<Schedule> spec = Specification.where(null);
 
-        if (date != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("date"), date));
-        if (startTime != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
-        if (endTime != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime));
-        if (room != null && !room.isEmpty()) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("room"), "%" + room + "%"));
+        if (date != null)
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("date"), date));
+        if (startTime != null)
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
+        if (endTime != null)
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime));
+        if (room != null && !room.isEmpty())
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("room"), "%" + room + "%"));
 
         return scheduleRepository.findAll(spec);
     }
@@ -150,35 +151,45 @@ public class ScheduleService {
 
         Specification<Schedule> spec = Specification.where(null);
 
-        if (date != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("date"), date));
-        if (dateFrom != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateFrom));
-        if (dateTo != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateTo));
-        if (startTime != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
-        if (endTime != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime));
-        if (room != null && !room.isEmpty()) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("room"), "%" + room + "%"));
-        if (courseName != null && !courseName.isEmpty()) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("courses").get("courses").get("name"), "%" + courseName + "%"));
-        if (classId != null) spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("courses").get("id"), classId));
+        if (date != null)
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("date"), date));
+        if (dateFrom != null)
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateFrom));
+        if (dateTo != null)
+            spec = spec
+                    .and((root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateTo));
+        if (startTime != null)
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
+        if (endTime != null)
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime));
+        if (room != null && !room.isEmpty())
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("room"), "%" + room + "%"));
+        if (courseName != null && !courseName.isEmpty())
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder
+                    .like(root.get("courses").get("courses").get("name"), "%" + courseName + "%"));
+        if (classId != null)
+            spec = spec.and(
+                    (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("courses").get("id"), classId));
 
         return scheduleRepository.findAll(spec, pageable);
     }
-
 
     public List<ScheduleResponse> getScheduleByLectureId(Integer lectureId, LocalDate startDate, LocalDate endDate) {
         List<Object[]> results = scheduleRepository.getScheduleByLectureId(lectureId, startDate, endDate);
 
         return results.stream().map(obj -> new ScheduleResponse(
                 (Integer) obj[0],
-                (String) obj[1],  // courseName
-                ((java.sql.Date) obj[2]).toLocalDate(),  // Chuyển đổi date
-                ((java.sql.Time) obj[3]).toLocalTime(),  // Chuyển đổi startTime
-                ((java.sql.Time) obj[4]).toLocalTime(),  // Chuyển đổi endTime
-                (String) obj[5],  // room
-                (Integer) obj[6],  // lectureId
+                (String) obj[1], // courseName
+                ((java.sql.Date) obj[2]).toLocalDate(), // Chuyển đổi date
+                ((java.sql.Time) obj[3]).toLocalTime(), // Chuyển đổi startTime
+                ((java.sql.Time) obj[4]).toLocalTime(), // Chuyển đổi endTime
+                (String) obj[5], // room
+                (Integer) obj[6], // lectureId
                 (String) obj[7], // fullname
-                obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null,  // endDate, kiểm tra null
-                obj[9] != null ? ((Number) obj[9]).longValue() : null,  // classScheduleId
-                obj[10] != null ? ((Number) obj[10]).longValue() : null,  // dayOfWeekId
-                (String) obj[11]
-        )).toList();
+                obj[8] != null ? ((java.sql.Date) obj[8]).toLocalDate() : null, // endDate, kiểm tra null
+                obj[9] != null ? ((Number) obj[9]).longValue() : null, // classScheduleId
+                obj[10] != null ? ((Number) obj[10]).longValue() : null, // dayOfWeekId
+                (String) obj[11])).toList();
     }
 }
