@@ -42,6 +42,11 @@ public class StudentService {
         return new StudentResponse(student);
     }
 
+    public Students getStudentEntityByUsername(String username) {
+        return studentRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên"));
+    }
+
     public List<StudentResponse> getAllStudent() {
         return studentRepository.findAll().stream()
                 .map(StudentResponse::new)
@@ -109,5 +114,14 @@ public class StudentService {
         });
 
         studentRepository.hardDelete(studentId);
+    }
+
+    public Students findByUsername(String username) {
+        return studentRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+    }
+
+    public Students updateStudent(Students student) {
+        return studentRepository.save(student);
     }
 }

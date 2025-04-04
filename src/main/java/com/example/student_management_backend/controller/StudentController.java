@@ -173,4 +173,45 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping(value = "/students/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateCurrentStudent(
+            @Valid @ModelAttribute StudentRequest studentRequest,
+            BindingResult bindingResult,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
+
+        // Lấy username từ Security Context
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> {
+                errors.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        try {
+            // Tìm student bằng username từ token
+            Students student = studentService.getStudentEntityByUsername(username);
+            // Cập nhật thông tin
+            student.setFullName(studentRequest.getFullName());
+            student.setDob(studentRequest.getDob());
+            student.setEmail(studentRequest.getEmail());
+            student.setPhone(studentRequest.getPhone());
+            student.setAddress(studentRequest.getAddress());
+
+            if (avatarFile != null && !avatarFile.isEmpty()) {
+                String avatarPath = fileStorageService.saveAvatarFile(avatarFile);
+                student.setAvatar(avatarPath);
+            }
+
+            Students updatedStudent = studentService.updateStudent(student);
+            return ResponseEntity.ok(new StudentResponse(updatedStudent));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("An error occurred: " + e.getMessage());
+        }
+    }
 }
