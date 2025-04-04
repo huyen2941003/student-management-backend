@@ -108,13 +108,14 @@ public class ScheduleService {
             Long classScheduleId =  obj[9] != null ? ((Number) obj[9]).longValue() : null;  // classScheduleId
             Long dayOfWeekId = obj[10] != null ? ((Number) obj[10]).longValue() : null;
             String dayName = obj[11] != null ? (String) obj[11] : null;
+            Integer courseClassId = (Integer) obj[12];
 
             // Nếu Schedule đã tồn tại trong Map, chỉ thêm dayName
             if (scheduleMap.containsKey(id)) {
                 scheduleMap.get(id).getDayNames().add(dayName);
             } else {
                 ScheduleResponse scheduleResponse = new ScheduleResponse(
-                        Math.toIntExact(id), courseName, date, startTime, endTime, room, lectureId,fullName, endDate,classScheduleId,dayOfWeekId, new ArrayList<>()
+                        Math.toIntExact(id), courseName, date, startTime, endTime, room, lectureId,fullName, endDate,classScheduleId,dayOfWeekId, new ArrayList<>(),courseClassId
                 );
                 if (dayName != null) {
                     scheduleResponse.getDayNames().add(dayName);

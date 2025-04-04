@@ -25,9 +25,10 @@ public class ScheduleResponse {
     private String dayName;
     private List<String> dayNames;
     private String fullName;
+    private Integer courseClassId;
     public ScheduleResponse(Integer id, String courseName, LocalDate date, LocalTime startTime, LocalTime endTime,
                             String room, Integer lectureId, String fullName, LocalDate endDate, Long classScheduleId,
-                            Long dayOfWeekId, List<String> dayNames) {
+                            Long dayOfWeekId, List<String> dayNames, Integer courseClassId) {
         this.id = id;
         this.courseName = courseName;
         this.date = date;
@@ -40,6 +41,7 @@ public class ScheduleResponse {
         this.classScheduleId = classScheduleId;
         this.dayOfWeekId = dayOfWeekId;
         this.dayNames = dayNames;
+        this.courseClassId = courseClassId;
     }
 
     // Constructor với 10 tham số (cho các phương thức mới)

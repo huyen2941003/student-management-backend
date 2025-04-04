@@ -82,7 +82,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer>, Jp
         s.endDate AS endDate,
         cs.classScheduleId AS classScheduleId,
         d.id AS dayOfWeekId,
-        d.dayName AS dayName
+        d.dayName AS dayName,
+        c.id as courseClassId
     FROM schedule s
     JOIN courseclass c ON s.classId = c.id
     JOIN courses c2 ON c.courseId = c2.id
