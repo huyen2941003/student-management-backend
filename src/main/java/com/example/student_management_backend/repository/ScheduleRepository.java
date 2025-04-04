@@ -64,7 +64,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer>, Jp
         LEFT JOIN classschedule cs ON cs.schedule_id = s.id
         LEFT JOIN dayofweek d ON cs.day_id = d.id
         WHERE c.lectureId = :lectureId
-        AND s.date BETWEEN :startDate AND :endDate
+        AND (s.date<= :endDate AND s.endDate >= :startDate )
         ORDER BY s.date, s.start_time
         """, nativeQuery = true)
     List<Object[]> getScheduleByLectureId(Integer lectureId, LocalDate startDate, LocalDate endDate);
