@@ -20,6 +20,7 @@ import java.util.List;
 public class CourseCLassService implements ICourseClassService {
     private final CourseClassRepository courseClassRepository;
     private final CourseRepository courseRepository;
+
     @Override
     public List<CourseClassScheduleResponse> getCourseClassSchedule(int studentId) {
         return courseClassRepository.getCourseChedule(studentId);
@@ -34,8 +35,7 @@ public class CourseCLassService implements ICourseClassService {
     public CourseClassResponse createCourseClass(Lectures lectureId, CourseClassRequest request) throws Exception {
         CourseClass courseClass = new CourseClass();
         Courses courses = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new Exception("Courses k tồn tại")
-        );
+                () -> new Exception("Courses k tồn tại"));
         courseClass.setCourses(courses);
         courseClass.setMaxStudent(request.getMaxStudent());
         courseClass.setCreatedDate(LocalDateTime.now());
@@ -43,10 +43,9 @@ public class CourseCLassService implements ICourseClassService {
         courseClass.setSemester(courses.getSemester());
         courseClassRepository.save(courseClass);
 
-        return new CourseClassResponse(courseClass.getId(),courseClass.getCourses().getId()
-                ,courseClass.getSemester(),courseClass.getMaxStudent(),
+        return new CourseClassResponse(courseClass.getId(), courseClass.getCourses().getId(), courseClass.getSemester(),
+                courseClass.getMaxStudent(),
                 courseClass.getCourses().getName());
     }
-
 
 }

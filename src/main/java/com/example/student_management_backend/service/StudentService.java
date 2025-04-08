@@ -80,7 +80,6 @@ public class StudentService {
     public Students updateStudentByAdmin(Integer id, Students updateStudentByAdmin) {
         return studentRepository.findById(id)
                 .map(student -> {
-                    // Cập nhật thông tin cơ bản
                     student.setFullName(updateStudentByAdmin.getFullName());
                     student.setDob(updateStudentByAdmin.getDob());
                     student.setEmail(updateStudentByAdmin.getEmail());
@@ -92,7 +91,6 @@ public class StudentService {
                     student.setMajors(updateStudentByAdmin.getMajors());
                     student.setDepartments(updateStudentByAdmin.getDepartments());
 
-                    // Cập nhật avatar nếu có
                     if (updateStudentByAdmin.getAvatar() != null) {
                         student.setAvatar(updateStudentByAdmin.getAvatar());
                     }

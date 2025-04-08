@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import com.example.student_management_backend.domain.Lectures;
+import com.example.student_management_backend.domain.Students;
 import com.example.student_management_backend.dto.response.lecture.LectureResponse;
+import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.repository.LectureRepository;
 import com.example.student_management_backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -102,5 +104,20 @@ public class LectureService {
 
     public Lectures getLectureByUserId(Long userId) {
         return lectureRepository.findByUserId(userId);
+    }
+
+    public LectureResponse getLectureByUsername(String username) {
+        Lectures lectures = lectureRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên"));
+        return new LectureResponse(lectures);
+    }
+
+    public Lectures getLectureEntityByUsername(String username) {
+        return lectureRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên"));
+    }
+
+    public Lectures updateLecture(Lectures lectures) {
+        return lectureRepository.save(lectures);
     }
 }

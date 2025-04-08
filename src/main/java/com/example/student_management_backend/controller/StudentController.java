@@ -15,23 +15,28 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.student_management_backend.domain.Students;
+import com.example.student_management_backend.domain.User;
 import com.example.student_management_backend.domain.Departments;
 import com.example.student_management_backend.domain.Majors;
+import com.example.student_management_backend.dto.request.ChangePasswordRequest;
 import com.example.student_management_backend.dto.request.StudentFullRequest;
 import com.example.student_management_backend.dto.request.StudentRequest;
 import com.example.student_management_backend.dto.response.student.StudentResponse;
 import com.example.student_management_backend.repository.DepartmentsRepository;
 import com.example.student_management_backend.repository.MajorsRepository;
+import com.example.student_management_backend.repository.UserRepository;
 import com.example.student_management_backend.service.FileStorageService;
 import com.example.student_management_backend.service.StudentService;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -50,6 +55,9 @@ public class StudentController {
 
     @Autowired
     private DepartmentsRepository departmentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
@@ -179,7 +187,6 @@ public class StudentController {
             BindingResult bindingResult,
             @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
 
-        // Lấy username từ Security Context
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (bindingResult.hasErrors()) {
@@ -191,9 +198,7 @@ public class StudentController {
         }
 
         try {
-            // Tìm student bằng username từ token
             Students student = studentService.getStudentEntityByUsername(username);
-            // Cập nhật thông tin
             student.setFullName(studentRequest.getFullName());
             student.setDob(studentRequest.getDob());
             student.setEmail(studentRequest.getEmail());
@@ -214,4 +219,42 @@ public class StudentController {
             return ResponseEntity.badRequest().body("An error occurred: " + e.getMessage());
         }
     }
+
+    @PutMapping("/students/me/change-password")
+    public ResponseEntity<?> changePassword(
+            @RequestBody @Valid ChangePasswordRequest changePasswordRequest,
+            BindingResult bindingResult) {
+
+        if (!changePasswordRequest.isPasswordMatch()) {
+            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Mật khẩu xác nhận không khớp");
+        }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error -> {
+                errors.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Students student = studentService.getStudentEntityByUsername(username);
+        User user = student.getUser();
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body("Mật khẩu cũ không chính xác");
+        }
+
+        if (passwordEncoder.matches(changePasswordRequest.getNewPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body("Mật khẩu mới phải khác mật khẩu cũ");
+        }
+
+        String encodedPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Đổi mật khẩu thành công");
+    }
+
 }

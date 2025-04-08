@@ -17,6 +17,9 @@ import org.springframework.stereotype.Repository;
 public interface LectureRepository extends JpaRepository<Lectures, Integer> {
     Optional<Lectures> findByEmail(String email);
 
+    @Query(value = "SELECT l.* FROM lecture l JOIN user u ON l.userId = u.id WHERE u.username = :username", nativeQuery = true)
+    Optional<Lectures> findByUsername(@Param("username") String username);
+
     Lectures findByUserId(Long userId);
 
     Optional<Lectures> findByUser(User user);
@@ -28,7 +31,6 @@ public interface LectureRepository extends JpaRepository<Lectures, Integer> {
     boolean existsByPhone(String phoneNumber);
 
     Integer getLectureByUserId(Long userId);
-
 
     Lectures findByUserId(int userId);
 

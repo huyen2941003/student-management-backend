@@ -13,17 +13,28 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendPasswordResetEmail(String toEmail, String resetLink) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(toEmail);
-            message.setSubject("Yêu cầu đặt lại mật khẩu");
-            message.setText("Để đặt lại mật khẩu, vui lòng nhấp vào liên kết sau: " + resetLink);
-            mailSender.send(message);
-        } catch (MailAuthenticationException e) {
-            throw new RuntimeException("Lỗi xác thực email: " + e.getMessage());
-        } catch (MailException e) {
-            throw new RuntimeException("Lỗi gửi email: " + e.getMessage());
-        }
+    /*
+     * public void sendPasswordResetEmail(String toEmail, String resetLink) {
+     * try {
+     * SimpleMailMessage message = new SimpleMailMessage();
+     * message.setTo(toEmail);
+     * message.setSubject("Yêu cầu đặt lại mật khẩu");
+     * message.setText("Để đặt lại mật khẩu, vui lòng nhấp vào liên kết sau: " +
+     * resetLink);
+     * mailSender.send(message);
+     * } catch (MailAuthenticationException e) {
+     * throw new RuntimeException("Lỗi xác thực email: " + e.getMessage());
+     * } catch (MailException e) {
+     * throw new RuntimeException("Lỗi gửi email: " + e.getMessage());
+     * }
+     * }
+     */
+
+    public void sendPasswordResetEmail(String toEmail, String otp) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Mã OTP đặt lại mật khẩu");
+        message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 5 phút.");
+        mailSender.send(message);
     }
 }

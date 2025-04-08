@@ -3,6 +3,7 @@ package com.example.student_management_backend.controller;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.io.IOException;
 
@@ -127,14 +128,20 @@ public class AuthController {
 
         Students student = studentRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sinh viên với email: " + email));
-
-        // Lấy user từ student
         User user = student.getUser();
 
-        String resetToken = generateResetToken(user);
-        String resetLink = "http://yourdomain.com/reset-password?token=" + resetToken;
-        emailService.sendPasswordResetEmail(student.getEmail(), resetLink);
+        /*
+         * String resetToken = generateResetToken(user);
+         * String resetLink = "http://yourdomain.com/reset-password?token=" +
+         * resetToken;
+         * emailService.sendPasswordResetEmail(student.getEmail(), resetLink);
+         */
 
+        String otp = generateOtp();
+        user.setResetToken(otp);
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(5)); // OTP thường hết hạn sau 5 phút
+        userRepository.save(user);
+        emailService.sendPasswordResetEmail(student.getEmail(), otp);
         return ResponseEntity.ok("Email đặt lại mật khẩu đã được gửi.");
     }
 
@@ -146,12 +153,24 @@ public class AuthController {
         return resetToken;
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        // Tìm user bằng token
-        User user = userRepository.findByResetToken(token)
-                .orElseThrow(() -> new RuntimeException("Token không hợp lệ"));
+    private String generateOtp() {
+        Random random = new Random();
+        int otpNumber = 100000 + random.nextInt(900000);
+        return String.valueOf(otpNumber);
+    }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String otp, @RequestParam String newPassword) {
+        /*
+         * User user = userRepository.findByResetToken(token)
+         * .orElseThrow(() -> new RuntimeException("Token không hợp lệ"));
+         */
+        User user = userRepository.findByResetToken(otp)
+                .orElseThrow(() -> new RuntimeException("Mã OTP không hợp lệ"));
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Mã OTP đã hết hạn");
+        }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String encodedPassword = passwordEncoder.encode(newPassword);
