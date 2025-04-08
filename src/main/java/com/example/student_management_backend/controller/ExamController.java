@@ -40,7 +40,7 @@ public class ExamController {
     // }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<Exams>> getAllExams() {
+    public ResponseEntity<List<ExamsScheduleResponse>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExam());
     }
 

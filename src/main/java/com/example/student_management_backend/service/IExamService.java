@@ -15,7 +15,7 @@ public interface IExamService {
 
     Exams findExamById(int id);
 
-    List<Exams> getAllExam();
+    List<ExamsScheduleResponse> getAllExam();
 
     void deleteExamById(int id);
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,10 +38,11 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public List<Exams> getAllExam() {
-        return examsRepository.findAll();
+    public List<ExamsScheduleResponse> getAllExam() {
+        return examsRepository.findAll().stream()
+                .map(ExamsScheduleResponse::new) // Gọi constructor từ entity
+                .collect(Collectors.toList());
     }
-
     @Override
     public void deleteExamById(int id) {
         try {
