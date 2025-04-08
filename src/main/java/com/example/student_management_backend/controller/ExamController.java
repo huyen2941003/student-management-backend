@@ -56,7 +56,7 @@ public class ExamController {
     }
     @PreAuthorize("hasAnyRole('ADMIN','LECTURE')")
     @PutMapping("{id}")
-    public ResponseEntity<Exams> updateExam(@RequestBody ExamRequest request,@RequestParam int id) throws Exception {
+    public ResponseEntity<Exams> updateExam(@RequestBody ExamRequest request,@PathVariable int id) throws Exception {
         Exams exams = examService.updateExam(request,id);
         return new ResponseEntity<>(exams, HttpStatus.OK);
     }
