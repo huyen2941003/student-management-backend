@@ -65,7 +65,7 @@ public class ExamService implements IExamService {
             exams.setStartTime(request.getStartTime());
             exams.setEndTime(request.getEndTime());
             exams.setClasses(classes);
-exams.setRoom(request.getRoom());
+            exams.setRoom(request.getRoom());
             return examsRepository.save(exams);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create exam: " + e.getMessage(), e);
@@ -146,5 +146,21 @@ exams.setRoom(request.getRoom());
         exams.setEndTime(request.getEndTime());
         examsRepository.save(exams);
         return exams;
+    }
+
+    @Override
+    public ExamsScheduleResponse getExamById(int id) throws Exception {
+        Exams exams = examsRepository.findById(id).orElseThrow(
+                ()-> new Exception("K ton tai")
+        );
+        ExamsScheduleResponse examsScheduleResponse = new ExamsScheduleResponse();
+        examsScheduleResponse.setId(id);
+        examsScheduleResponse.setExamDate(exams.getExamDate());
+        examsScheduleResponse.setClassId(exams.getClasses().getId());
+        examsScheduleResponse.setEndTime(exams.getEndTime());
+        examsScheduleResponse.setStartTime(exams.getStartTime());
+        examsScheduleResponse.setRoom(exams.getRoom());
+        examsScheduleResponse.setCourseName(exams.getClasses().getCourses().getName());
+        return examsScheduleResponse;
     }
 }

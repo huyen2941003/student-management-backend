@@ -43,7 +43,11 @@ public class ExamController {
     public ResponseEntity<List<ExamsScheduleResponse>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExam());
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<ExamsScheduleResponse> getExams(@PathVariable int id) throws Exception {
+        return ResponseEntity.ok(examService.getExamById(id));
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<Exams> createExam(@RequestBody ExamRequest request) throws Exception {

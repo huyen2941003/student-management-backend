@@ -33,4 +33,6 @@ public interface IExamService {
             Pageable pageable);
 
     Exams updateExam(ExamRequest request, int id) throws Exception;
+
+    ExamsScheduleResponse getExamById(int id) throws Exception;
 }
