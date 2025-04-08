@@ -62,9 +62,10 @@ public class ExamService implements IExamService {
 
             Exams exams = new Exams();
             exams.setExamDate(request.getExamDate());
-            exams.setStartTime(request.getStartDate());
+            exams.setStartTime(request.getStartTime());
+            exams.setEndTime(request.getEndTime());
             exams.setClasses(classes);
-
+exams.setRoom(request.getRoom());
             return examsRepository.save(exams);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create exam: " + e.getMessage(), e);
@@ -140,9 +141,9 @@ public class ExamService implements IExamService {
         );
         exams.setClasses(courseClass);
         exams.setExamDate(request.getExamDate());
-        exams.setStartTime(request.getStartDate());
+        exams.setStartTime(request.getStartTime());
         exams.setRoom(request.getRoom());
-        exams.setEndTime(request.getEndDate());
+        exams.setEndTime(request.getEndTime());
         examsRepository.save(exams);
         return exams;
     }
