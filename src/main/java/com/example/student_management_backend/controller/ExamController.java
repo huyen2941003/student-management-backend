@@ -43,7 +43,7 @@ public class ExamController {
     public ResponseEntity<List<ExamsScheduleResponse>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExam());
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','LECTURE')")
     @GetMapping("/{id}")
     public ResponseEntity<ExamsScheduleResponse> getExams(@PathVariable int id) throws Exception {
         return ResponseEntity.ok(examService.getExamById(id));

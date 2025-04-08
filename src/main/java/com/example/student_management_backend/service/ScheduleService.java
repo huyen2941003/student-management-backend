@@ -192,4 +192,6 @@ public class ScheduleService {
                 obj[10] != null ? ((Number) obj[10]).longValue() : null, // dayOfWeekId
                 (String) obj[11])).toList();
     }
+
+
 }

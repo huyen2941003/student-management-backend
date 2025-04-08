@@ -41,6 +41,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.getSchedule(studentId, start, end));
     }
 
+
     @GetMapping("/lectureId")
     public ResponseEntity<List<ScheduleResponse>> getScheduleByLectureId(
             @RequestParam String startDate,
