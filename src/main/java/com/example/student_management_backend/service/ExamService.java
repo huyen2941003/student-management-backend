@@ -1,11 +1,14 @@
 package com.example.student_management_backend.service;
 
 import com.example.student_management_backend.domain.CourseClass;
+import com.example.student_management_backend.domain.Courses;
 import com.example.student_management_backend.domain.Exams;
 import com.example.student_management_backend.dto.request.ExamRequest;
 import com.example.student_management_backend.dto.response.ExamsScheduleResponse;
+import com.example.student_management_backend.exception.CustomException;
 import com.example.student_management_backend.repository.CourseClassRepository;
 import com.example.student_management_backend.repository.ExamsRepository;
+import com.google.api.gax.rpc.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -122,5 +125,23 @@ public class ExamService implements IExamService {
         }
 
         return examsRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Exams updateExam(ExamRequest request, int id) throws Exception {
+        Exams exams = examsRepository.findById(id).orElseThrow(
+                ()->new Exception("K ton tai")
+        );
+        exams.setId(id);
+        CourseClass courseClass = courseClassRepository.findById(request.getClassesId()).orElseThrow(
+                ()-> new Exception("K ton tai courseClass")
+        );
+        exams.setClasses(courseClass);
+        exams.setExamDate(request.getExamDate());
+        exams.setStartTime(request.getStartDate());
+        exams.setRoom(request.getRoom());
+        exams.setEndTime(request.getEndDate());
+        examsRepository.save(exams);
+        return exams;
     }
 }

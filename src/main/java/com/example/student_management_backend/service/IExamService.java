@@ -31,4 +31,6 @@ public interface IExamService {
             String courseName,
             Integer classId,
             Pageable pageable);
+
+    Exams updateExam(ExamRequest request, int id) throws Exception;
 }

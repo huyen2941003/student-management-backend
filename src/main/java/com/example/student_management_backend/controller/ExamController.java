@@ -50,6 +50,12 @@ public class ExamController {
         Exams exams = examService.createExam(request);
         return new ResponseEntity<>(exams, HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("{id}")
+    public ResponseEntity<Exams> updateExam(@RequestBody ExamRequest request,@RequestParam int id) throws Exception {
+        Exams exams = examService.updateExam(request,id);
+        return new ResponseEntity<>(exams, HttpStatus.OK);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
